@@ -6,7 +6,7 @@ typedef struct {
 
 typedef struct {
   Matrix *output;
-  double *output_grads;
+  Matrix *output_grads;
 
   Matrix *weights;
   double **weight_grads;
@@ -96,3 +96,12 @@ void print_dot(Matrix *A, Matrix *B);
  */
 Matrix *calc_layer_output(Layer *layer, Matrix *input);
 
+/**
+ * Calculates the gradients of the weights in a layer of a neural network 
+ * assuming it's output gradients have been initialized as a 1 * n array.
+ * 
+ * Note: The gradients are allocated and stored in the layer struct
+ *
+ * @param layer A layer with initalized output gradients
+ */
+void calc_weights_gradient(Layer *layer);
