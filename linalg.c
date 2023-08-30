@@ -56,32 +56,7 @@ double dot_product(Matrix *vec1, Matrix *vec2) {
   return rv;
 }
 
-static void print_dot_operation(Matrix *A, Matrix *B, double result) {
-  unsigned int output_height, output_height_half;
-  output_height = A->rows + 2;
-  output_height_half = (output_height - 1) / 2;
-
-  for (unsigned int i = 0; i < output_height; i++) {
-    print_matrix_row(A, i);
-    if (i == output_height_half)
-      printf("  .  ");
-    else
-      printf("     ");
-
-    print_matrix_row(B, i);
-    if (i == output_height_half)
-      printf("  =  %f\n", result);
-    else
-      putchar('\n');
-  }
-}
-
-void print_dot(Matrix *A, Matrix *B) {
-  double scalar = dot_product(A, B);
-  print_dot_operation(A, B, scalar);
-}
-
-static int matmul_col_and_row(Matrix *A, Matrix *B, unsigned int A_row, 
+static int dot_col_and_row(Matrix *A, Matrix *B, unsigned int A_row, 
                               unsigned int B_col) {
   double rv = 0;
   for (unsigned int i = 0; i < B->rows; i++) {
@@ -94,71 +69,11 @@ Matrix *matmul(Matrix *A, Matrix *B) {
   Matrix *rv = allocate_empty(A->rows, B->columns);
   for (unsigned int current_col = 0; current_col < B->columns; current_col++) {
     for (unsigned int current_row = 0; current_row < A->rows; current_row++) {
-      rv->values[current_row][current_col] = matmul_col_and_row(A, B, current_row, current_col);
+      rv->values[current_row][current_col] = dot_col_and_row(A, B, current_row, current_col);
     }
   }
   return rv;
 }
-
-static void print_operation(Matrix *A, Matrix *B, Matrix *result, char operation) {
-  unsigned int output_height, output_height_half;
-  unsigned int A_starting_row, A_ending_row;
-  unsigned int B_starting_row, B_ending_row;
-  unsigned int result_starting_row, result_ending_row;
-
-  if (A->rows > B->rows) {
-    output_height = A->rows + 2;
-    A_starting_row = 0;
-    result_starting_row = (A->rows - result->rows) / 2;
-    B_starting_row = (A->rows - B->rows) / 2;
-  } else {
-    output_height = B->rows + 2;
-    A_starting_row = (B->rows - A->rows) / 2;
-    result_starting_row = (B->rows - result->rows) / 2;
-    B_starting_row = 0;
-  }
-  
-  A_ending_row = A_starting_row + A->rows + 2 - 1;
-  B_ending_row = B_starting_row + B->rows + 2 - 1;
-  result_ending_row = result_starting_row + result -> rows + 2 - 1;
-  output_height_half = (output_height - 1) / 2;
-
-  for (unsigned int i = 0; i < output_height; i++) {
-    if (i >= A_starting_row && i <= A_ending_row) {
-      print_matrix_row(A, i - A_starting_row);
-    } else {
-      print_matrix_row(A, -1);
-    }
-
-    if (i == output_height_half)
-      printf("  %c  ", operation);
-    else
-      printf("     ");
-
-    if (i >= B_starting_row && i <= B_ending_row) {
-      print_matrix_row(B, i - B_starting_row);
-    } else {
-      print_matrix_row(B, -1);
-    }
-
-    if (i == output_height_half)
-      printf("  =  ");
-    else
-      printf("     ");
-
-    if (i >= result_starting_row && i <= result_ending_row) {
-      print_matrix_row(result, i - result_starting_row);
-    }
-    putchar('\n');
-  }
-}
-
-void print_matmul(Matrix *A, Matrix *B) {
-  Matrix *result = matmul(A, B);
-  print_operation(A, B, result, '*');
-  free_matrix(result);
-}
-
 
 /*
  * NOTE: The following functions are for printing matrices and operations on
@@ -230,6 +145,90 @@ void print_matrix_row(Matrix *matrix, int row) {
       putchar(' ');
   }
   printf("|");
+}
+
+static void print_operation(Matrix *A, Matrix *B, Matrix *result, char operation) {
+  unsigned int output_height, output_height_half;
+  unsigned int A_starting_row, A_ending_row;
+  unsigned int B_starting_row, B_ending_row;
+  unsigned int result_starting_row, result_ending_row;
+
+  if (A->rows > B->rows) {
+    output_height = A->rows + 2;
+    A_starting_row = 0;
+    result_starting_row = (A->rows - result->rows) / 2;
+    B_starting_row = (A->rows - B->rows) / 2;
+  } else {
+    output_height = B->rows + 2;
+    A_starting_row = (B->rows - A->rows) / 2;
+    result_starting_row = (B->rows - result->rows) / 2;
+    B_starting_row = 0;
+  }
+  
+  A_ending_row = A_starting_row + A->rows + 2 - 1;
+  B_ending_row = B_starting_row + B->rows + 2 - 1;
+  result_ending_row = result_starting_row + result -> rows + 2 - 1;
+  output_height_half = (output_height - 1) / 2;
+
+  for (unsigned int i = 0; i < output_height; i++) {
+    if (i >= A_starting_row && i <= A_ending_row) {
+      print_matrix_row(A, i - A_starting_row);
+    } else {
+      print_matrix_row(A, -1);
+    }
+
+    if (i == output_height_half)
+      printf("  %c  ", operation);
+    else
+      printf("     ");
+
+    if (i >= B_starting_row && i <= B_ending_row) {
+      print_matrix_row(B, i - B_starting_row);
+    } else {
+      print_matrix_row(B, -1);
+    }
+
+    if (i == output_height_half)
+      printf("  =  ");
+    else
+      printf("     ");
+
+    if (i >= result_starting_row && i <= result_ending_row) {
+      print_matrix_row(result, i - result_starting_row);
+    }
+    putchar('\n');
+  }
+}
+
+void print_matmul(Matrix *A, Matrix *B) {
+  Matrix *result = matmul(A, B);
+  print_operation(A, B, result, '*');
+  free_matrix(result);
+}
+
+static void print_dot_operation(Matrix *A, Matrix *B, double result) {
+  unsigned int output_height, output_height_half;
+  output_height = A->rows + 2;
+  output_height_half = (output_height - 1) / 2;
+
+  for (unsigned int i = 0; i < output_height; i++) {
+    print_matrix_row(A, i);
+    if (i == output_height_half)
+      printf("  .  ");
+    else
+      printf("     ");
+
+    print_matrix_row(B, i);
+    if (i == output_height_half)
+      printf("  =  %f\n", result);
+    else
+      putchar('\n');
+  }
+}
+
+void print_dot(Matrix *A, Matrix *B) {
+  double scalar = dot_product(A, B);
+  print_dot_operation(A, B, scalar);
 }
 
 void print_matrix(Matrix *matrix) {
