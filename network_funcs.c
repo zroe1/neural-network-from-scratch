@@ -30,3 +30,18 @@ void calc_weights_gradient(Layer *layer) {
   layer->weight_grads = weight_grads;
   print_matrix_verbose(weight_grads);
 }
+
+/* This can be applied to RELU layers in addition to wieght layers */
+void calc_layer_output_gradients(Layer *layer, Matrix *weight_grads_above) {
+  unsigned int rv_cols = layer->output->columns - 1;
+  Matrix *output_grads = allocate_empty(1, rv_cols);
+
+  for (unsigned int i = 0; i < rv_cols; i++) {
+    for (unsigned int j = 0; j < weight_grads_above->columns; j++) {
+      output_grads->values[0][i] += weight_grads_above->values[i][j];
+    }
+  }
+
+  layer->output_grads = output_grads;
+  print_matrix_verbose(output_grads);
+}

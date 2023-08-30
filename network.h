@@ -12,6 +12,11 @@ typedef struct {
   Matrix *weight_grads;
 } Layer;
 
+typedef struct {
+  Matrix *output;
+  Matrix *output_grads;
+} RELU_Layer;
+
 void print_matrix_row(Matrix *matrix, int row);
 
 /**
@@ -105,3 +110,13 @@ Matrix *calc_layer_output(Layer *layer, Matrix *input);
  * @param layer A layer with initalized output gradients
  */
 void calc_weights_gradient(Layer *layer);
+
+/**
+ * Calculates the gradients of the output of a layer of a neural network 
+ * 
+ * Note: The gradients are allocated and stored in the layer struct
+ *
+ * @param layer A layer of a neural network
+ * @param weight_grads_above The weights of the layer above param 'layer'
+ */
+void calc_layer_output_gradients(Layer *layer, Matrix *weight_grads_above);
