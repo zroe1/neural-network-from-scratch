@@ -9,7 +9,7 @@ typedef struct {
   Matrix *output_grads;
 
   Matrix *weights;
-  double **weight_grads;
+  Matrix *weight_grads;
 } Layer;
 
 void print_matrix_row(Matrix *matrix, int row);

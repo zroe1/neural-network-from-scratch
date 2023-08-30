@@ -26,6 +26,7 @@ void calc_weights_gradient(Layer *layer) {
       }
     }
   }
-  Matrix *w = allocate_from_2D_arr(rows, cols - 1, modified_weights);
-  return w;
+  Matrix *weight_grads = allocate_from_2D_arr(rows, cols - 1, modified_weights);
+  layer->weight_grads = weight_grads;
+  print_matrix_verbose(weight_grads);
 }
