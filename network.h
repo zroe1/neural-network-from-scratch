@@ -4,6 +4,14 @@ typedef struct {
   double **values;
 } Matrix;
 
+typedef struct {
+  Matrix *output;
+  double *output_grads;
+
+  Matrix *weights;
+  double **wieght_grads;
+} Layer;
+
 void print_matrix_row(Matrix *matrix, int row);
 
 /**
@@ -47,6 +55,24 @@ Matrix *allocate_from_2D_arr(unsigned int rows, unsigned int columns,
  * @param matrix The matrix to be freed
  */
 void free_matrix(Matrix *matrix);
+
+/**
+ * Preforms matrix multiplication on 2 matrices and returns the result as a
+ * freshly allocated matrix.
+ * 
+ * @param A The first matrix to be multiplied.
+ * @param B The second matrix to be multiplied.
+ * @return The result of the matrix multiplication.
+ */
+Matrix *matmul(Matrix *A, Matrix *B);
+
+/**
+ * Prints the matrix multiplication of 2 matrices.
+ * 
+ * @param A The first matrix to be multiplied.
+ * @param B The second matrix to be multiplied.
+ */
+void print_matmul(Matrix *A, Matrix *B);
 
 /**
  * Calculates the dot product of two vectors and returns the answer as a
