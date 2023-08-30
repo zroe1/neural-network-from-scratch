@@ -9,7 +9,7 @@ typedef struct {
   double *output_grads;
 
   Matrix *weights;
-  double **wieght_grads;
+  double **weight_grads;
 } Layer;
 
 void print_matrix_row(Matrix *matrix, int row);
@@ -85,4 +85,14 @@ void print_matmul(Matrix *A, Matrix *B);
 double dot_product(Matrix *vec1, Matrix *vec2);
 
 void print_dot(Matrix *A, Matrix *B);
+
+/**
+ * Calculates the output of a layer in a neural network assuming it's weights
+ * have been initialized.
+ * 
+ * @param layer A layer with initalized weights
+ * @param input A size 1 x n sized matrix
+ * @return The output of the layer
+ */
+Matrix *calc_layer_output(Layer *layer, Matrix *input);
 
