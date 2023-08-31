@@ -22,6 +22,31 @@ RELU_Layer *init_RELU_layer(Matrix *output, Matrix *output_grads) {
   return rv;
 }
 
+Matrix *init_random_wieghts(unsigned int rows, unsigned int cols) {
+  Matrix *rv = allocate_empty(rows, cols);
+
+  /* rightmost row is always set as zeros with one 1.0 at the bottom to append a 
+    1 to output */
+  for (unsigned int i = 0; i < rows - 1; i++) {
+    rv->values[i][cols - 1] = 0.0;
+  }
+  rv->values[rows - 1][cols - 1] = 1.0;
+
+  // rest of values are set to a random double between -1 and 1
+  for (unsigned int i = 0; i < rows; i++) {
+    for (unsigned int j = 0; j < cols - 1; j++) {
+      double val = (double)rand() / RAND_MAX;
+      if (rand() % 2 == 0) {
+        val *= -1;
+      }
+      rv->values[i][j] = val;
+    }
+  }
+
+  print_matrix(rv);
+  return rv;
+}
+
 void calc_layer_output(Layer *layer, Matrix *input) {
   if (input->columns != layer->weights->rows) {
     fprintf(stderr, "inproper matrix multiplication");

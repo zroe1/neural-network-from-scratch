@@ -98,6 +98,8 @@ Layer *init_layer(Matrix *output,
 
 RELU_Layer *init_RELU_layer(Matrix *output, Matrix *output_grads);
 
+Matrix *init_random_wieghts(unsigned int rows, unsigned int cols);
+
 /**
  * Calculates the output of a layer in a neural network assuming it's weights
  * have been initialized.
