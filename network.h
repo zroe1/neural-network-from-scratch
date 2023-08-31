@@ -106,15 +106,15 @@ RELU_Layer *init_RELU_layer(Matrix *output, Matrix *output_grads);
  * @param input A size 1 x n sized matrix
  * @return The output of the layer
  */
-void calc_layer_output(Layer *layer, Layer *input_layer);
+void calc_layer_output(Layer *layer, Matrix *input);
 
 Matrix *weights_matmul_gradients_subtotal(Layer *layer);
 
-void calc_layer_output_gradients(Layer *layer, Layer *above_layer);
+Matrix *calc_layer_input_gradients(Layer *above_layer);
 
 void calc_RELU_layer(RELU_Layer *relu, Matrix *input);
 
-void calc_layer_gradients_from_RELU(Layer *input_layer, RELU_Layer* RELU_Layer);
+void calc_layer_gradients_from_RELU(Layer *input_layer, Matrix *RELU_grads);
 
 void print_layer(Layer *layer, char *layer_name);
 

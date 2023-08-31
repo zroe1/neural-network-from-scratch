@@ -22,8 +22,8 @@ RELU_Layer *init_RELU_layer(Matrix *output, Matrix *output_grads) {
   return rv;
 }
 
-void calc_layer_output(Layer *layer, Layer *input_layer) {
-  Matrix *input = input_layer->output;
+void calc_layer_output(Layer *layer, Matrix *input) {
+  // Matrix *input = input_layer->output;
   if (input->columns != layer->weights->rows) {
     fprintf(stderr, "inproper matrix multiplication");
     exit(1);
@@ -46,7 +46,7 @@ Matrix *weights_gradients_subtotal(Layer *layer) {
   return weight_grads;
 }
 
-void calc_layer_output_gradients(Layer *layer, Layer *above_layer) {
+Matrix *calc_layer_input_gradients(Layer *above_layer) {
   Matrix *weight_grads_above = weights_gradients_subtotal(above_layer);
   unsigned int rv_cols = above_layer->weights->rows - 1;
   Matrix *output_grads = allocate_empty(1, rv_cols);
@@ -57,7 +57,7 @@ void calc_layer_output_gradients(Layer *layer, Layer *above_layer) {
     }
   }
 
-  layer->output_grads = output_grads;
+  return output_grads;
 }
 
 void calc_RELU_layer(RELU_Layer *relu, Matrix *input) {
@@ -73,12 +73,12 @@ void calc_RELU_layer(RELU_Layer *relu, Matrix *input) {
   relu->output = output;
 }
 
-void calc_layer_gradients_from_RELU(Layer *input_layer, RELU_Layer* RELU_Layer) {
+void calc_layer_gradients_from_RELU(Layer *input_layer, Matrix *RELU_grads) {
   Matrix *grads = allocate_empty(1, input_layer->output->columns - 1);
 
   for (unsigned int i = 0; i < grads->columns; i++) {
     if (input_layer->output->values[0][i] > 0) {
-      grads->values[0][i] = RELU_Layer->output_grads->values[0][i];
+      grads->values[0][i] = RELU_grads->values[0][i];
     } else {
       grads->values[0][i] = 0;
     }
