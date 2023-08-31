@@ -96,6 +96,37 @@ void calc_layer_gradients_from_RELU(Layer *input_layer, Matrix *RELU_grads) {
   input_layer->output_grads = grads;
 }
 
+/* Assumes layer ouput gradients have been set correctly */
+void calc_weight_gradients(Layer *layer, Matrix *layer_inputs) {
+  if (layer_inputs->columns != layer->weights->rows) {
+    fprintf(stderr, "ERROR: inputs != number of wieghts per set\n");
+    fprintf(stderr, "(EXIT EARLY)\n");
+    exit(1);
+  }
+
+  if (layer->output_grads->columns != layer->weights->columns - 1) {
+    fprintf(stderr, "ERROR: output gradients != sets of weights\n");
+    fprintf(stderr, "(EXIT EARLY)\n");
+    exit(1);
+  }
+
+  unsigned int rv_rows = layer->weights->rows;
+  unsigned int rv_cols = layer->weights->columns - 1;
+
+  Matrix *rv = allocate_empty(rv_rows, rv_cols);
+
+  for (unsigned int i = 0; i < layer_inputs->columns; i++) {
+    for (unsigned int j = 0; j < layer->output_grads->columns; j++) {
+      if (i == layer_inputs->columns - 1) {
+        rv->values[i][j] = layer->output_grads->values[0][j];
+      } else {
+        rv->values[i][j] = layer_inputs->values[0][i] * layer->output_grads->values[0][j];
+      }
+    }
+  }
+  layer->weight_grads = rv;
+}
+
 /**
  * NOTE: below functions are only for debugging purposes and printing small
  * layers. They are not suitable for printing out large layers of networks to

@@ -119,3 +119,5 @@ void calc_layer_gradients_from_RELU(Layer *input_layer, Matrix *RELU_grads);
 void print_layer(Layer *layer, char *layer_name);
 
 void print_RELU_layer(RELU_Layer *layer, char *layer_name);
+
+void calc_weight_gradients(Layer *layer, Matrix *layer_inputs);
