@@ -43,3 +43,31 @@ Matrix *calc_layer_output_gradients(Layer *above_layer) {
   // print_matrix_verbose(output_grads);
   return output_grads;
 }
+
+void calc_RELU_layer(Matrix *input) {
+  Matrix *output = allocate_empty(1, input->columns);
+  // Matrix *gradients
+
+  for (unsigned int i = 0; i < input->columns; i++) {
+    if (input->values[0][i] > 0) {
+      output->values[0][i] = input->values[0][i];
+    } else {
+      output->values[0][i] = 0;
+    }
+  }
+  print_matrix_verbose(output);
+}
+
+void calc_layer_gradients_from_RELU(Layer *input_layer, RELU_Layer* RELU_Layer) {
+  Matrix *grads = allocate_empty(1, input_layer->output->columns - 1);
+
+  for (unsigned int i = 0; i < grads->columns; i++) {
+    if (input_layer->output->values[0][i] > 0) {
+      grads->values[0][i] = RELU_Layer->output_grads->values[0][i];
+    } else {
+      grads->values[0][i] = 0;
+    }
+  }
+  input_layer->output_grads = grads;
+  print_matrix_verbose(grads);
+}

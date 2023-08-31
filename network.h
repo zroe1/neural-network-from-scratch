@@ -112,3 +112,8 @@ Matrix *weights_matmul_gradients_subtotal(Layer *layer);
  * @return The gradients of the outputs of the previous layer
  */
 Matrix *calc_layer_output_gradients(Layer *above_layer);
+
+
+void calc_RELU_layer(Matrix *input);
+
+void calc_layer_gradients_from_RELU(Layer *input_layer, RELU_Layer* RELU_Layer);
