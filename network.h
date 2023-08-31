@@ -99,17 +99,9 @@ void print_dot(Matrix *A, Matrix *B);
  * @param input A size 1 x n sized matrix
  * @return The output of the layer
  */
-Matrix *calc_layer_output(Layer *layer, Matrix *input);
+void calc_layer_output(Layer *layer, Layer *input_layer);
 
-/**
- * Calculates the gradients of the weights in a layer of a neural network 
- * assuming it's output gradients have been initialized as a 1 * n array.
- * 
- * Note: The gradients are allocated and stored in the layer struct
- *
- * @param layer A layer with initalized output gradients
- */
-void calc_weights_gradient(Layer *layer);
+Matrix *weights_matmul_gradients_subtotal(Layer *layer);
 
 /**
  * Calculates the gradients of the output of a layer of a neural network 
@@ -119,4 +111,4 @@ void calc_weights_gradient(Layer *layer);
  * @param layer A layer of a neural network
  * @param weight_grads_above The weights of the layer above param 'layer'
  */
-void calc_layer_output_gradients(Layer *layer, Matrix *weight_grads_above);
+void calc_layer_output_gradients(Layer *layer, Layer *above_layer);
