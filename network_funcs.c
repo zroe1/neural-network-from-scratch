@@ -28,9 +28,9 @@ Matrix *weights_gradients_subtotal(Layer *layer) {
   return weight_grads;
 }
 
-void calc_layer_output_gradients(Layer *layer, Layer *above_layer) {
+Matrix *calc_layer_output_gradients(Layer *above_layer) {
   Matrix *weight_grads_above = weights_gradients_subtotal(above_layer);
-  unsigned int rv_cols = layer->output->columns - 1;
+  unsigned int rv_cols = above_layer->weights->rows - 1;
   Matrix *output_grads = allocate_empty(1, rv_cols);
 
   for (unsigned int i = 0; i < rv_cols; i++) {
@@ -39,6 +39,7 @@ void calc_layer_output_gradients(Layer *layer, Layer *above_layer) {
     }
   }
 
-  layer->output_grads = output_grads;
+  // layer->output_grads = output_grads;
   // print_matrix_verbose(output_grads);
+  return output_grads;
 }
