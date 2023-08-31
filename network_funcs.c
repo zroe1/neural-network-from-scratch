@@ -23,7 +23,6 @@ RELU_Layer *init_RELU_layer(Matrix *output, Matrix *output_grads) {
 }
 
 void calc_layer_output(Layer *layer, Matrix *input) {
-  // Matrix *input = input_layer->output;
   if (input->columns != layer->weights->rows) {
     fprintf(stderr, "inproper matrix multiplication");
     exit(1);
@@ -35,6 +34,12 @@ Matrix *weights_gradients_subtotal(Layer *layer) {
   unsigned int rows = layer->weights->rows - 1;
   unsigned int cols = layer->weights->columns - 1;
 
+  if (layer->output_grads->columns != cols) {
+    fprintf(stderr, "ERROR: ouput gradients != number of sets of weights.\n");
+    fprintf(stderr, "(EXIT EARLY)\n");
+    exit(1);
+  }
+
   double rv_arr[rows][cols];
   for (unsigned int i = 0; i < rows; i++) {
     for (unsigned int j = 0; j < cols; j++) {
@@ -42,18 +47,17 @@ Matrix *weights_gradients_subtotal(Layer *layer) {
       rv_arr[i][j] = layer->weights->values[i][j] * output_grad;
     }
   }
-  Matrix *weight_grads = allocate_from_2D_arr(rows, cols, rv_arr);
-  return weight_grads;
+  return allocate_from_2D_arr(rows, cols, rv_arr);
 }
 
 Matrix *calc_layer_input_gradients(Layer *above_layer) {
-  Matrix *weight_grads_above = weights_gradients_subtotal(above_layer);
-  unsigned int rv_cols = above_layer->weights->rows - 1;
+  Matrix *subtotals = weights_gradients_subtotal(above_layer);
+  unsigned int rv_cols = above_layer->weights->rows - 1; // -1 to ignore bias values
   Matrix *output_grads = allocate_empty(1, rv_cols);
 
   for (unsigned int i = 0; i < rv_cols; i++) {
-    for (unsigned int j = 0; j < weight_grads_above->columns; j++) {
-      output_grads->values[0][i] += weight_grads_above->values[i][j];
+    for (unsigned int j = 0; j < subtotals->columns; j++) {
+      output_grads->values[0][i] += subtotals->values[i][j];
     }
   }
 
@@ -74,6 +78,12 @@ void calc_RELU_layer(RELU_Layer *relu, Matrix *input) {
 }
 
 void calc_layer_gradients_from_RELU(Layer *input_layer, Matrix *RELU_grads) {
+  if (RELU_grads->columns != input_layer->output->columns -1) {
+    fprintf(stderr, "ERROR: RELU gradients != number of input layer outputs\n");
+    fprintf(stderr, "(EXIT EARLY)\n");
+    exit(1);
+  }
+
   Matrix *grads = allocate_empty(1, input_layer->output->columns - 1);
 
   for (unsigned int i = 0; i < grads->columns; i++) {
