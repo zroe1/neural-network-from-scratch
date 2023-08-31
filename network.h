@@ -91,6 +91,13 @@ double dot_product(Matrix *vec1, Matrix *vec2);
 
 void print_dot(Matrix *A, Matrix *B);
 
+Layer *init_layer(Matrix *output, 
+                  Matrix *output_grads, 
+                  Matrix *weights, 
+                  Matrix *weight_grads);
+
+RELU_Layer *init_RELU_layer(Matrix *output, Matrix *output_grads);
+
 /**
  * Calculates the output of a layer in a neural network assuming it's weights
  * have been initialized.

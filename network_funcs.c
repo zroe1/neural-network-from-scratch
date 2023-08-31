@@ -2,6 +2,26 @@
 #include <stdlib.h>
 #include "network.h"
 
+Layer *init_layer(Matrix *output, 
+                  Matrix *output_grads, 
+                  Matrix *weights, 
+                  Matrix *weight_grads) 
+{
+  Layer *rv = (Layer *)malloc(sizeof(Layer));
+  rv->output = output;
+  rv->output_grads = output_grads;
+  rv->weights = weights;
+  rv->weight_grads = weight_grads;
+  return rv;
+}
+
+RELU_Layer *init_RELU_layer(Matrix *output, Matrix *output_grads) {
+  RELU_Layer *rv = (RELU_Layer *)malloc(sizeof(RELU_Layer));
+  rv->output = output;
+  rv->output_grads = output_grads;
+  return rv;
+}
+
 void calc_layer_output(Layer *layer, Layer *input_layer) {
   Matrix *input = input_layer->output;
   if (input->columns != layer->weights->rows) {
