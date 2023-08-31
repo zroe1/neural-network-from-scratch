@@ -85,3 +85,63 @@ void calc_layer_gradients_from_RELU(Layer *input_layer, RELU_Layer* RELU_Layer) 
   }
   input_layer->output_grads = grads;
 }
+
+/**
+ * NOTE: below functions are only for debugging purposes and printing small
+ * layers. They are not suitable for printing out large layers of networks to
+ * the console.
+ */
+
+void print_layer(Layer *layer, char *layer_name) {
+  printf("*****************************************************************\n");
+  printf("                      LAYER: %s\n", layer_name);
+  printf("*****************************************************************\n");
+  printf("OUTPUT MATRIX:\n");
+  if (layer->output != NULL)
+    print_matrix_verbose(layer->output);
+  else
+    printf("--> NULL pointer\n");
+
+  putchar('\n');
+  printf("OUTPUT GRADIENTS:\n");
+  if (layer->output_grads != NULL)
+    print_matrix_verbose(layer->output_grads);
+  else
+    printf("--> NULL pointer\n");
+
+  putchar('\n');
+  printf("WEIGHTS:\n");
+  if (layer->weights != NULL)
+    print_matrix_verbose(layer->weights);
+  else
+    printf("--> NULL pointer\n");
+
+  putchar('\n');
+  printf("WEIGHTS GRADIENTS:\n");
+  if (layer->weight_grads != NULL)
+    print_matrix_verbose(layer->weight_grads);
+  else
+    printf("--> NULL pointer\n");
+  
+  printf("_________________________________________________________________\n\n");
+}
+
+void print_RELU_layer(RELU_Layer *layer, char *layer_name) {
+  printf("*****************************************************************\n");
+  printf("                      LAYER: %s\n", layer_name);
+  printf("*****************************************************************\n");
+  printf("OUTPUT MATRIX:\n");
+  if (layer->output != NULL)
+    print_matrix_verbose(layer->output);
+  else
+    printf("--> NULL pointer\n");
+
+  putchar('\n');
+  printf("OUTPUT GRADIENTS:\n");
+  if (layer->output_grads != NULL)
+    print_matrix_verbose(layer->output_grads);
+  else
+    printf("--> NULL pointer\n");
+  
+  printf("_________________________________________________________________\n\n");
+}
