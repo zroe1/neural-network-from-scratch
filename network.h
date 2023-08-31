@@ -110,17 +110,8 @@ void calc_layer_output(Layer *layer, Layer *input_layer);
 
 Matrix *weights_matmul_gradients_subtotal(Layer *layer);
 
-/**
- * Calculates the gradients of the output of a layer of a neural network 
- * 
- *
- * @param layer A layer of a neural network
- * @param weight_grads_above The weights of the layer above param 'layer'
- * @return The gradients of the outputs of the previous layer
- */
-Matrix *calc_layer_output_gradients(Layer *above_layer);
+void calc_layer_output_gradients(Layer *layer, Layer *above_layer);
 
-
-void calc_RELU_layer(Matrix *input);
+void calc_RELU_layer(RELU_Layer *relu, Matrix *input);
 
 void calc_layer_gradients_from_RELU(Layer *input_layer, RELU_Layer* RELU_Layer);

@@ -29,7 +29,6 @@ void calc_layer_output(Layer *layer, Layer *input_layer) {
     exit(1);
   }
   layer->output = matmul(input, layer->weights);
-  print_matmul(input, layer->weights);
 }
 
 Matrix *weights_gradients_subtotal(Layer *layer) {
@@ -44,11 +43,10 @@ Matrix *weights_gradients_subtotal(Layer *layer) {
     }
   }
   Matrix *weight_grads = allocate_from_2D_arr(rows, cols, rv_arr);
-  // print_matrix_verbose(weight_grads);
   return weight_grads;
 }
 
-Matrix *calc_layer_output_gradients(Layer *above_layer) {
+void calc_layer_output_gradients(Layer *layer, Layer *above_layer) {
   Matrix *weight_grads_above = weights_gradients_subtotal(above_layer);
   unsigned int rv_cols = above_layer->weights->rows - 1;
   Matrix *output_grads = allocate_empty(1, rv_cols);
@@ -59,14 +57,11 @@ Matrix *calc_layer_output_gradients(Layer *above_layer) {
     }
   }
 
-  // layer->output_grads = output_grads;
-  // print_matrix_verbose(output_grads);
-  return output_grads;
+  layer->output_grads = output_grads;
 }
 
-void calc_RELU_layer(Matrix *input) {
+void calc_RELU_layer(RELU_Layer *relu, Matrix *input) {
   Matrix *output = allocate_empty(1, input->columns);
-  // Matrix *gradients
 
   for (unsigned int i = 0; i < input->columns; i++) {
     if (input->values[0][i] > 0) {
@@ -75,7 +70,7 @@ void calc_RELU_layer(Matrix *input) {
       output->values[0][i] = 0;
     }
   }
-  print_matrix_verbose(output);
+  relu->output = output;
 }
 
 void calc_layer_gradients_from_RELU(Layer *input_layer, RELU_Layer* RELU_Layer) {
@@ -89,5 +84,4 @@ void calc_layer_gradients_from_RELU(Layer *input_layer, RELU_Layer* RELU_Layer) 
     }
   }
   input_layer->output_grads = grads;
-  print_matrix_verbose(grads);
 }
