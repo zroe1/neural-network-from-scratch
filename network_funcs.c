@@ -22,7 +22,7 @@ RELU_Layer *init_RELU_layer(Matrix *output, Matrix *output_grads) {
   return rv;
 }
 
-Matrix *init_random_wieghts(unsigned int rows, unsigned int cols) {
+Matrix *init_random_weights(unsigned int rows, unsigned int cols) {
   Matrix *rv = allocate_empty(rows, cols);
 
   /* rightmost row is always set as zeros with one 1.0 at the bottom to append a 
@@ -43,7 +43,7 @@ Matrix *init_random_wieghts(unsigned int rows, unsigned int cols) {
     }
   }
 
-  print_matrix(rv);
+  // print_matrix(rv);
   return rv;
 }
 

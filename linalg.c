@@ -56,7 +56,7 @@ double dot_product(Matrix *vec1, Matrix *vec2) {
   return rv;
 }
 
-static int dot_col_and_row(Matrix *A, Matrix *B, unsigned int A_row, 
+static double dot_col_and_row(Matrix *A, Matrix *B, unsigned int A_row, 
                               unsigned int B_col) {
   double rv = 0;
   for (unsigned int i = 0; i < B->rows; i++) {
