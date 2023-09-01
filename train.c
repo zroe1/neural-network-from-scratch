@@ -18,6 +18,38 @@ void forward_pass(Layer *input_layer,
   calc_layer_output(output_layer, layer2_RELU->output);
 }
 
+void backward_pass(Layer *input_layer,
+                  Layer *layer1,
+                  RELU_Layer *layer1_RELU,
+                  Layer *layer2,
+                  RELU_Layer *layer2_RELU,
+                  Layer *output_layer,
+                  double loss,
+                  double correct)
+{
+  /* calculates the gradient for the output */
+  double output_grad = loss / output_layer->output->values[0][0];
+  if (output_layer->output->values[0][0] - correct < 0) {
+    if (output_grad > 0)
+      output_grad *= -1;
+  }
+  double output_grads[1][1] = {{output_grad}};
+  output_layer->output_grads = allocate_from_2D_arr(1, 1, output_grads);
+
+  calc_weight_gradients(output_layer, layer2_RELU->output);
+  gradient_descent_on_layer(output_layer, LEARNING_RATE);
+
+  layer2_RELU->output_grads = calc_layer_input_gradients(output_layer);
+  calc_layer_gradients_from_RELU(layer2, layer2_RELU->output_grads);
+  calc_weight_gradients(layer2, layer1_RELU->output);
+  gradient_descent_on_layer(layer2, LEARNING_RATE);
+  
+  layer1_RELU->output_grads = calc_layer_input_gradients(layer2);
+  calc_layer_gradients_from_RELU(layer1, layer1_RELU->output_grads);
+  calc_weight_gradients(layer1, input_layer->output);
+  gradient_descent_on_layer(layer1, LEARNING_RATE);
+}
+
 int main() {
   double ys[4] = {1, -1, -1, 1};
 
@@ -47,37 +79,26 @@ int main() {
   RELU_Layer *layer2_RELU = init_RELU_layer(NULL, NULL);
   Layer *output_layer = init_layer(NULL, NULL, init_random_weights(5, 2), NULL);
 
-  forward_pass(inputs[0], layer1, layer1_RELU, layer2, layer2_RELU, output_layer);
+  unsigned int input_num = 0;
 
-  double loss = (output_layer->output->values[0][0] - ys[0]) * (output_layer->output->values[0][0] - ys[0]);
-  printf("loss: %f\n", loss);
+  forward_pass(inputs[input_num], layer1, layer1_RELU, layer2, layer2_RELU, output_layer);
 
-  /* calculates the gradient for the output */
-  double output_grad = loss / output_layer->output->values[0][0];
-  if (output_layer->output->values[0][0] - ys[0] < 0) {
-    if (output_grad > 0)
-      output_grad *= -1;
-  }
-  double output_grads[1][1] = {{output_grad}};
-  output_layer->output_grads = allocate_from_2D_arr(1, 1, output_grads);
+  double loss = (output_layer->output->values[0][0] - ys[input_num]) * (output_layer->output->values[0][0] - ys[input_num]);
+  printf("input num: %d, loss: %f\n", input_num, loss);
 
-  calc_weight_gradients(output_layer, layer2_RELU->output);
-  gradient_descent_on_layer(output_layer, LEARNING_RATE);
-
-  layer2_RELU->output_grads = calc_layer_input_gradients(output_layer);
-  calc_layer_gradients_from_RELU(layer2, layer2_RELU->output_grads);
-  calc_weight_gradients(layer2, layer1_RELU->output);
-  gradient_descent_on_layer(layer2, LEARNING_RATE);
-  
-  layer1_RELU->output_grads = calc_layer_input_gradients(layer2);
-  calc_layer_gradients_from_RELU(layer1, layer1_RELU->output_grads);
-  calc_weight_gradients(layer1, inputs[0]->output);
-  gradient_descent_on_layer(layer1, LEARNING_RATE);
+  backward_pass(inputs[input_num],
+                layer1,
+                layer1_RELU,
+                layer2,
+                layer2_RELU,
+                output_layer,
+                loss,
+                ys[input_num]);
 
 
-  forward_pass(inputs[0], layer1, layer1_RELU, layer2, layer2_RELU, output_layer);
-  loss = (output_layer->output->values[0][0] - ys[0]) * (output_layer->output->values[0][0] - ys[0]);
-  printf("loss: %f\n", loss);
+  forward_pass(inputs[input_num], layer1, layer1_RELU, layer2, layer2_RELU, output_layer);
+  loss = (output_layer->output->values[0][0] - ys[input_num]) * (output_layer->output->values[0][0] - ys[input_num]);
+  printf("input num: %d, loss: %f\n", input_num, loss);
 
   return 0;
 }
