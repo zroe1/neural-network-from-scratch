@@ -152,6 +152,17 @@ void calc_weight_gradients(Layer *layer, Matrix *layer_inputs) {
   layer->weight_grads = rv;
 }
 
+void gradient_descent_on_layer(Layer *layer, double learning_rate) {
+  Matrix *weight_grads = layer->weight_grads;
+  Matrix *weights = layer->weights;
+
+  for (unsigned int i = 0; i < weight_grads->columns; i++) {
+    for (unsigned int j = 0; j < weight_grads->rows; j++) {
+      weights->values[i][j] -= weight_grads->values[i][j] * learning_rate;
+    }
+  }
+}
+
 /**
  * NOTE: below functions are only for debugging purposes and printing small
  * layers. They are not suitable for printing out large layers of networks to

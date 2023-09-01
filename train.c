@@ -4,17 +4,6 @@
 
 double LEARNING_RATE = 0.001;
 
-void gradient_descent_on_layer(Layer *layer, double learning_rate) {
-  Matrix *weight_grads = layer->weight_grads;
-  Matrix *weights = layer->weights;
-
-  for (unsigned int i = 0; i < weight_grads->columns; i++) {
-    for (unsigned int j = 0; j < weight_grads->rows; j++) {
-      weights->values[i][j] -= weight_grads->values[i][j] * learning_rate;
-    }
-  }
-}
-
 int main() {
   double ys[4] = {1, -1, -1, 1};
 

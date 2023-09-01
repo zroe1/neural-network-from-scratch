@@ -123,3 +123,5 @@ void print_layer(Layer *layer, char *layer_name);
 void print_RELU_layer(RELU_Layer *layer, char *layer_name);
 
 void calc_weight_gradients(Layer *layer, Matrix *layer_inputs);
+
+void gradient_descent_on_layer(Layer *layer, double learning_rate);
