@@ -4,6 +4,20 @@
 
 double LEARNING_RATE = 0.001;
 
+void forward_pass(Layer *input_layer,
+                  Layer *layer1,
+                  RELU_Layer *layer1_RELU,
+                  Layer *layer2,
+                  RELU_Layer *layer2_RELU,
+                  Layer *output_layer)
+{
+  calc_layer_output(layer1, input_layer->output);
+  calc_RELU_layer(layer1_RELU, layer1->output);
+  calc_layer_output(layer2, layer1_RELU->output);
+  calc_RELU_layer(layer2_RELU, layer2->output);
+  calc_layer_output(output_layer, layer2_RELU->output);
+}
+
 int main() {
   double ys[4] = {1, -1, -1, 1};
 
@@ -33,11 +47,7 @@ int main() {
   RELU_Layer *layer2_RELU = init_RELU_layer(NULL, NULL);
   Layer *output_layer = init_layer(NULL, NULL, init_random_weights(5, 2), NULL);
 
-  calc_layer_output(layer1, inputs[0]->output);
-  calc_RELU_layer(layer1_RELU, layer1->output);
-  calc_layer_output(layer2, layer1_RELU->output);
-  calc_RELU_layer(layer2_RELU, layer2->output);
-  calc_layer_output(output_layer, layer2_RELU->output);
+  forward_pass(inputs[0], layer1, layer1_RELU, layer2, layer2_RELU, output_layer);
 
   double loss = (output_layer->output->values[0][0] - ys[0]) * (output_layer->output->values[0][0] - ys[0]);
   printf("loss: %f\n", loss);
@@ -65,11 +75,7 @@ int main() {
   gradient_descent_on_layer(layer1, LEARNING_RATE);
 
 
-  calc_layer_output(layer1, inputs[0]->output);
-  calc_RELU_layer(layer1_RELU, layer1->output);
-  calc_layer_output(layer2, layer1_RELU->output);
-  calc_RELU_layer(layer2_RELU, layer2->output);
-  calc_layer_output(output_layer, layer2_RELU->output);
+  forward_pass(inputs[0], layer1, layer1_RELU, layer2, layer2_RELU, output_layer);
   loss = (output_layer->output->values[0][0] - ys[0]) * (output_layer->output->values[0][0] - ys[0]);
   printf("loss: %f\n", loss);
 
