@@ -75,18 +75,18 @@ Matrix *weights_gradients_subtotal(Layer *layer) {
   return allocate_from_2D_arr(rows, cols, rv_arr);
 }
 
-Matrix *calc_layer_input_gradients(Layer *above_layer) {
+Matrix *calc_layer_input_gradients(Layer *above_layer, Matrix *rv) {
   Matrix *subtotals = weights_gradients_subtotal(above_layer);
   unsigned int rv_cols = above_layer->weights->rows - 1; // -1 to ignore bias values
-  Matrix *output_grads = allocate_empty(1, rv_cols);
+  // Matrix *output_grads = allocate_empty(1, rv_cols);
 
   for (unsigned int i = 0; i < rv_cols; i++) {
     for (unsigned int j = 0; j < subtotals->columns; j++) {
-      output_grads->values[0][i] += subtotals->values[i][j];
+      rv->values[0][i] += subtotals->values[i][j];
     }
   }
 
-  return output_grads;
+  return rv;
 }
 
 void calc_RELU_layer(RELU_Layer *relu, Matrix *input) {
@@ -138,7 +138,7 @@ void calc_weight_gradients(Layer *layer, Matrix *layer_inputs) {
   unsigned int rv_rows = layer->weights->rows;
   unsigned int rv_cols = layer->weights->columns - 1;
 
-  Matrix *rv = allocate_empty(rv_rows, rv_cols);
+  Matrix *rv = layer->weight_grads;
 
   for (unsigned int i = 0; i < layer_inputs->columns; i++) {
     for (unsigned int j = 0; j < layer->output_grads->columns; j++) {
@@ -149,7 +149,7 @@ void calc_weight_gradients(Layer *layer, Matrix *layer_inputs) {
       }
     }
   }
-  layer->weight_grads = rv;
+  // layer->weight_grads = rv;
 }
 
 void gradient_descent_on_layer(Layer *layer, double learning_rate) {

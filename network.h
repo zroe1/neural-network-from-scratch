@@ -112,7 +112,7 @@ void calc_layer_output(Layer *layer, Matrix *input);
 
 Matrix *weights_matmul_gradients_subtotal(Layer *layer);
 
-Matrix *calc_layer_input_gradients(Layer *above_layer);
+Matrix *calc_layer_input_gradients(Layer *above_layer, Matrix *rv);
 
 void calc_RELU_layer(RELU_Layer *relu, Matrix *input);
 
