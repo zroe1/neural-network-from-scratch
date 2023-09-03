@@ -147,3 +147,5 @@ void backward_pass(Layer *input_layer,
                   Layer *output_layer,
                   double loss,
                   double correct);
+
+double calc_mean_squared_loss(double output, double correct);

@@ -241,6 +241,10 @@ void backward_pass(Layer *input_layer,
   calc_weight_gradients(layer1, input_layer->output);
 }
 
+double calc_mean_squared_loss(double output, double correct) {
+  return (output - correct) * (ouput - correct);
+}
+
 /**
  * NOTE: below functions are only for debugging purposes and printing small
  * layers. They are not suitable for printing out large layers of networks to
