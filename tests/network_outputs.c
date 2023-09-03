@@ -20,5 +20,6 @@ Test(ouputs, outputs1)
   calc_layer_output(l, allocate_from_2D_arr(1, 2, input_arr));
   cr_assert(l->output->values[0][0] == 4);
 
+  free_RELU_layer(relu);
   free_layer(l);
 }

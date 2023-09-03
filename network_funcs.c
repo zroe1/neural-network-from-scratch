@@ -38,6 +38,16 @@ void free_layer(Layer *l) {
   free(l);
 }
 
+void free_RELU_layer(RELU_Layer *l) {
+  if (l->output != NULL) {
+    free_matrix(l->output);
+  }
+  if (l->output_grads != NULL) {
+    free_matrix(l->output_grads);
+  }
+  free(l);
+}
+
 Matrix *init_random_weights(unsigned int rows, unsigned int cols) {
   Matrix *rv = allocate_empty(rows, cols);
 
