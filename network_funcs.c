@@ -249,6 +249,40 @@ double calc_grad_of_input_to_loss(double output, double correct) {
   return 2.0 * (output - correct);
 }
 
+void calc_squish_layer(Squish_Layer *layer, Matrix *inputs) {
+  if (inputs->rows > 1) {
+    fprintf(stderr, "ERROR: input matrix is not 1 * n.\n");
+    fprintf(stderr, "(EXIT EARLY)\n");
+    exit(1);
+  }
+
+  double min_input = inputs->values[0][0];
+  for (unsigned int i = 0; i < inputs->columns; i++) {
+    if (inputs->values[0][i] < min_input) {
+      min_input = inputs->values[0][i];
+    }
+  }
+
+  free(layer->ouput);
+  Matrix *output = allocate_empty(inputs->rows, inputs->columns);
+  if (min_input < 0) {
+    double to_add = -min_input;
+    for (unsigned int i = 0; i < inputs->columns; i++) {
+      output->values[0][i] = inputs->values[0][i] + to_add;
+    }
+  }
+
+  double output_sum = 0;
+  for (unsigned int i = 0; i < output->columns; i++) {
+    output_sum += output->values[0][i];
+  }
+  for (unsigned int i = 0; i < output->columns; i++) {
+    output->values[0][i] /= output_sum;
+  }
+
+  layer->output_sum = output_sum;
+}
+
 /**
  * NOTE: below functions are only for debugging purposes and printing small
  * layers. They are not suitable for printing out large layers of networks to

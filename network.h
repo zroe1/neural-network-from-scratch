@@ -17,6 +17,17 @@ typedef struct {
   Matrix *output_grads;
 } RELU_Layer;
 
+/* 
+ * This may be swapped out for softmax or sigmoid in a future version.
+ * Currently it adds by a constant to make all values positive and divides by 
+ * the sum of the ouputs of the previous layer to put all values between 0 & 1.
+ */
+typedef struct {
+  double output_sum;
+  Matrix *ouput;
+  Matrix *ouput_grads;
+} Squish_Layer;
+
 void print_matrix_row(Matrix *matrix, int row);
 
 /**
