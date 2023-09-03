@@ -22,6 +22,22 @@ RELU_Layer *init_RELU_layer(Matrix *output, Matrix *output_grads) {
   return rv;
 }
 
+void free_layer(Layer *l) {
+  if (l->output != NULL) {
+    free_matrix(l->output);
+  }
+  if (l->output_grads != NULL) {
+    free_matrix(l->output_grads);
+  }
+  if (l->weights != NULL) {
+    free_matrix(l->weights);
+  }
+  if (l->weight_grads != NULL) {
+    free_matrix(l->weight_grads);
+  }
+  free(l);
+}
+
 Matrix *init_random_weights(unsigned int rows, unsigned int cols) {
   Matrix *rv = allocate_empty(rows, cols);
 

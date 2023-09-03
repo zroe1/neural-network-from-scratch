@@ -96,6 +96,8 @@ Layer *init_layer(Matrix *output,
                   Matrix *weights, 
                   Matrix *weight_grads);
 
+void free_layer(Layer *l);
+
 RELU_Layer *init_RELU_layer(Matrix *output, Matrix *output_grads);
 
 void zero_gradients(Matrix *grads);
