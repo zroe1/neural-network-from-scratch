@@ -123,3 +123,49 @@ Test(loss_grad, lossgrad01)
   double grad = calc_grad_of_input_to_loss(0.5, 1);
   cr_assert(grad + 1 < 0.0001);
 }
+
+Test(loss_grad, loss_grad2)
+{
+  double grad = calc_grad_of_input_to_loss(0, 1);
+  cr_assert(grad + 2 < 0.0001);
+}
+
+Test(loss_grad, loss_grad3)
+{
+  double grad = calc_grad_of_input_to_loss(1, 1);
+  cr_assert(grad < 0.0001);
+}
+
+Test(loss_grad, loss_grad4)
+{
+  double grad = calc_grad_of_input_to_loss(1, 1);
+  cr_assert(grad < 0.0001);
+}
+
+Test(loss_grad, loss_grad5)
+{
+  double input_arr[1][2] = {
+    {-1, 1}
+  };
+  double weights[2][2] = {
+    {-0.25, 0},
+    {0, 1}
+  };
+
+  Matrix *in = allocate_from_2D_arr(1, 2, input_arr);
+  Layer *l = init_layer(NULL, NULL, allocate_from_2D_arr(2, 2, weights), allocate_empty(2, 1));
+  calc_layer_output(l, in);
+
+  double output_grad = calc_grad_of_input_to_loss(l->output->values[0][0], 1);
+  double output_grad_arr[1][1] = {
+    {output_grad}
+  };
+  l->output_grads = allocate_from_2D_arr(1, 1, output_grad_arr);
+  calc_weight_gradients(l, in);
+
+  cr_assert(l->weight_grads->values[0][0] - 1.5 < 0.0001);
+  cr_assert(l->output_grads->values[0][0] + 1.5 < 0.0001);
+
+  free_matrix(in);
+  free_layer(l);
+}
