@@ -94,3 +94,32 @@ Test(relu_grads, relu01)
   free_layer(in);
   free_RELU_layer(relu);
 }
+
+/* 
+ * NOTE: Loss tests are inlcuded in this file because loss is used to calculate 
+ * all gradients in the network
+ */
+
+Test(loss_test, loss00)
+{
+  double loss = calc_mean_squared_loss(0.5, 1);
+  cr_assert(loss - 0.25 < 0.0001);
+}
+
+Test(loss_test, loss01)
+{
+  double loss = calc_mean_squared_loss(0.5, 0);
+  cr_assert(loss - 0.25 < 0.0001);
+}
+
+Test(loss_grad, lossgrad00)
+{
+  double grad = calc_grad_of_input_to_loss(0.5, 0);
+  cr_assert(grad - 1 < 0.0001);
+}
+
+Test(loss_grad, lossgrad01)
+{
+  double grad = calc_grad_of_input_to_loss(0.5, 1);
+  cr_assert(grad + 1 < 0.0001);
+}

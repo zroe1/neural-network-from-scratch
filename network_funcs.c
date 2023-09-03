@@ -242,7 +242,11 @@ void backward_pass(Layer *input_layer,
 }
 
 double calc_mean_squared_loss(double output, double correct) {
-  return (output - correct) * (ouput - correct);
+  return (output - correct) * (output - correct);
+}
+
+double calc_grad_of_input_to_loss(double output, double correct) {
+  return 2.0 * (output - correct);
 }
 
 /**
