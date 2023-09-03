@@ -98,6 +98,8 @@ Layer *init_layer(Matrix *output,
 
 RELU_Layer *init_RELU_layer(Matrix *output, Matrix *output_grads);
 
+void zero_gradients(Matrix *grads);
+
 Matrix *init_random_weights(unsigned int rows, unsigned int cols);
 
 /**

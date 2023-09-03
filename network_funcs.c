@@ -42,9 +42,18 @@ Matrix *init_random_weights(unsigned int rows, unsigned int cols) {
       rv->values[i][j] = val;
     }
   }
-
-  // print_matrix(rv);
   return rv;
+}
+
+void zero_gradients(Matrix *grads) {
+  unsigned int rows = grads->rows;
+  unsigned int cols = grads->columns;
+
+  for (unsigned int i = 0; i < rows; i++) {
+    for (unsigned int j = 0; j < cols; j++) {
+      grads->values[i][j] = 0;
+    }
+  }
 }
 
 void calc_layer_output(Layer *layer, Matrix *input) {
