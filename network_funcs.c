@@ -113,9 +113,9 @@ void calc_layer_gradients_from_RELU(Layer *input_layer, Matrix *RELU_grads) {
 
   for (unsigned int i = 0; i < grads->columns; i++) {
     if (input_layer->output->values[0][i] > 0) {
-      grads->values[0][i] = RELU_grads->values[0][i];
+      grads->values[0][i] += RELU_grads->values[0][i];
     } else {
-      grads->values[0][i] = 0;
+      grads->values[0][i] += 0;
     }
   }
   input_layer->output_grads = grads;
@@ -143,9 +143,9 @@ void calc_weight_gradients(Layer *layer, Matrix *layer_inputs) {
   for (unsigned int i = 0; i < layer_inputs->columns; i++) {
     for (unsigned int j = 0; j < layer->output_grads->columns; j++) {
       if (i == layer_inputs->columns - 1) {
-        rv->values[i][j] = layer->output_grads->values[0][j];
+        rv->values[i][j] += layer->output_grads->values[0][j];
       } else {
-        rv->values[i][j] = layer_inputs->values[0][i] * layer->output_grads->values[0][j];
+        rv->values[i][j] += layer_inputs->values[0][i] * layer->output_grads->values[0][j];
       }
     }
   }
@@ -161,6 +161,35 @@ void gradient_descent_on_layer(Layer *layer, double learning_rate) {
       weights->values[i][j] -= weight_grads->values[i][j] * learning_rate;
     }
   }
+}
+
+void backward_pass(Layer *input_layer,
+                  Layer *layer1,
+                  RELU_Layer *layer1_RELU,
+                  Layer *layer2,
+                  RELU_Layer *layer2_RELU,
+                  Layer *output_layer,
+                  double loss,
+                  double correct)
+{
+  /* calculates the gradient for the output */
+  double output_grad = loss / output_layer->output->values[0][0];
+  if (output_layer->output->values[0][0] - correct < 0) {
+    if (output_grad > 0)
+      output_grad *= -1;
+  }
+  double output_grads[1][1] = {{output_grad}};
+  output_layer->output_grads = allocate_from_2D_arr(1, 1, output_grads);
+
+  calc_weight_gradients(output_layer, layer2_RELU->output);
+
+  layer2_RELU->output_grads = calc_layer_input_gradients(output_layer, layer2_RELU->output_grads);
+  calc_layer_gradients_from_RELU(layer2, layer2_RELU->output_grads);
+  calc_weight_gradients(layer2, layer1_RELU->output);
+  
+  layer1_RELU->output_grads = calc_layer_input_gradients(layer2, layer1_RELU->output_grads);
+  calc_layer_gradients_from_RELU(layer1, layer1_RELU->output_grads);
+  calc_weight_gradients(layer1, input_layer->output);
 }
 
 /**
