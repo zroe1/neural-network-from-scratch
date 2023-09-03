@@ -162,3 +162,9 @@ void backward_pass(Layer *input_layer,
 double calc_mean_squared_loss(double output, double correct);
 
 double calc_grad_of_input_to_loss(double ouput, double correct);
+
+Squish_Layer *init_squish_layer(Matrix *output, Matrix *output_grads);
+
+void calc_squish_layer(Squish_Layer *layer, Matrix *inputs);
+
+void print_squish_layer(Squish_Layer *layer, char *layer_name);
