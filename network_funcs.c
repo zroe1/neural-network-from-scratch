@@ -249,6 +249,14 @@ double calc_grad_of_input_to_loss(double output, double correct) {
   return 2.0 * (output - correct);
 }
 
+Squish_Layer *init_squish_layer(Matrix *output, Matrix *output_grads) {
+  Squish_Layer *rv = (Squish_Layer *)malloc(sizeof(Squish_Layer));
+  rv->output_sum = 0;
+  rv->output = output;
+  rv->output_grads = output_grads;
+  return rv;
+}
+
 void calc_squish_layer(Squish_Layer *layer, Matrix *inputs) {
   if (inputs->rows > 1) {
     fprintf(stderr, "ERROR: input matrix is not 1 * n.\n");
@@ -257,32 +265,33 @@ void calc_squish_layer(Squish_Layer *layer, Matrix *inputs) {
   }
 
   double min_input = inputs->values[0][0];
-  for (unsigned int i = 0; i < inputs->columns; i++) {
+  for (unsigned int i = 0; i < inputs->columns - 1; i++) {
     if (inputs->values[0][i] < min_input) {
       min_input = inputs->values[0][i];
     }
   }
 
-  free(layer->ouput);
+  free(layer->output);
   Matrix *output = allocate_empty(inputs->rows, inputs->columns);
   if (min_input < 0) {
     double to_add = -min_input;
-    for (unsigned int i = 0; i < inputs->columns; i++) {
+    for (unsigned int i = 0; i < inputs->columns - 1; i++) {
       output->values[0][i] = inputs->values[0][i] + to_add;
     }
   }
 
   double output_sum = 0;
-  for (unsigned int i = 0; i < output->columns; i++) {
+  for (unsigned int i = 0; i < output->columns - 1; i++) {
     output_sum += output->values[0][i];
   }
-  for (unsigned int i = 0; i < output->columns; i++) {
+  for (unsigned int i = 0; i < output->columns - 1; i++) {
     output->values[0][i] /= output_sum;
   }
+  output->values[0][output->columns - 1] = 1;
 
   layer->output_sum = output_sum;
 }
-
+ 
 /**
  * NOTE: below functions are only for debugging purposes and printing small
  * layers. They are not suitable for printing out large layers of networks to

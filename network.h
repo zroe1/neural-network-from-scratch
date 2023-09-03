@@ -24,8 +24,8 @@ typedef struct {
  */
 typedef struct {
   double output_sum;
-  Matrix *ouput;
-  Matrix *ouput_grads;
+  Matrix *output;
+  Matrix *output_grads;
 } Squish_Layer;
 
 void print_matrix_row(Matrix *matrix, int row);
