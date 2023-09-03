@@ -163,6 +163,20 @@ void gradient_descent_on_layer(Layer *layer, double learning_rate) {
   }
 }
 
+void forward_pass(Layer *input_layer,
+                  Layer *layer1,
+                  RELU_Layer *layer1_RELU,
+                  Layer *layer2,
+                  RELU_Layer *layer2_RELU,
+                  Layer *output_layer)
+{
+  calc_layer_output(layer1, input_layer->output);
+  calc_RELU_layer(layer1_RELU, layer1->output);
+  calc_layer_output(layer2, layer1_RELU->output);
+  calc_RELU_layer(layer2_RELU, layer2->output);
+  calc_layer_output(output_layer, layer2_RELU->output);
+}
+
 void backward_pass(Layer *input_layer,
                   Layer *layer1,
                   RELU_Layer *layer1_RELU,
