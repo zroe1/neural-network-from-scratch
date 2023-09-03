@@ -351,3 +351,27 @@ void print_RELU_layer(RELU_Layer *layer, char *layer_name) {
   
   printf("_________________________________________________________________\n\n");
 }
+
+void print_squish_layer(Squish_Layer *layer, char *layer_name) {
+  printf("*****************************************************************\n");
+  printf("                      LAYER: %s\n", layer_name);
+  printf("*****************************************************************\n");
+  printf("OUTPUT MATRIX:\n");
+  if (layer->output != NULL)
+    print_matrix_verbose(layer->output);
+  else
+    printf("--> NULL pointer\n");
+
+  putchar('\n');
+  printf("OUTPUT GRADIENTS:\n");
+  if (layer->output_grads != NULL)
+    print_matrix_verbose(layer->output_grads);
+  else
+    printf("--> NULL pointer\n");
+
+  putchar('\n');
+  printf("OUTPUT SUM:\n");
+  printf("--> %f\n", layer->output_sum);
+  
+  printf("_________________________________________________________________\n\n");
+}
