@@ -43,19 +43,6 @@ void free_matrix(Matrix *matrix) {
   free(matrix);
 }
 
-/* Assumes the the vectors are both rows or both columns */
-double dot_product(Matrix *vec1, Matrix *vec2) {
-  double rv = 0;
-
-  for (unsigned int i = 0; i < vec1->rows; i++) {
-    for (unsigned int j = 0; j < vec1->columns; j++) {
-      rv += vec1->values[i][j] * vec2->values[i][j];
-    }
-  }
-
-  return rv;
-}
-
 static double dot_col_and_row(Matrix *A, Matrix *B, unsigned int A_row, 
                               unsigned int B_col) {
   double rv = 0;
