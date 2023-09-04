@@ -38,7 +38,28 @@ Test(input_grads, ingrad00) {
   free_layer(l);
 }
 
-Test(input_grads, ingrad01)
+Test(input_grads, ingrad01) {
+  double weights_arr[2][2] = {
+    {2, 0},
+    {0, 1}
+  };
+
+  double output_grads[1][1] = {
+    {1}
+  };
+
+  // test with initalized output gradients on input layer
+  Layer *in = init_layer(NULL, allocate_empty(1, 1), NULL, NULL);
+  Layer *l = init_layer(NULL, allocate_from_2D_arr(1, 1, output_grads), allocate_from_2D_arr(2, 2, weights_arr), NULL);
+
+  in->output_grads = calc_layer_input_gradients(l, in->output_grads);
+  cr_assert(in->output_grads->values[0][0] == 2);
+
+  free_layer(in);
+  free_layer(l);
+}
+
+Test(input_grads, ingrad02)
 {
   double input_arr[1][2] = {
     {2, 1}
