@@ -127,12 +127,10 @@ Matrix *calc_layer_input_gradients(Layer *above_layer, Matrix *rv) {
   // if rv matrix passed in is NULL, a new one is created to be returned
   if (rv == NULL) {
     rv = allocate_empty(1, rv_cols);
-  }  
-
-  // zeros out previous gradients
-  for (unsigned int i = 0; i < rv->rows; i++) {
-    for (unsigned int j = 0; j < rv->columns; j++) {
-      rv->values[i][j] = 0;
+  }  else {
+    // zeros out previous gradients
+    for (unsigned int i = 0; i < rv->columns; i++) {
+      rv->values[0][i] = 0;
     }
   }
 
@@ -165,7 +163,16 @@ void calc_layer_gradients_from_RELU(Layer *input_layer, Matrix *RELU_grads) {
     exit(1);
   }
 
-  Matrix *grads = allocate_empty(1, input_layer->output->columns - 1);
+  Matrix *grads;
+  // if input_layer->output_grads doesn't exist, a new one must be created
+  if (input_layer->output_grads == NULL) {
+    grads = allocate_empty(1, input_layer->output->columns - 1);
+  } else {
+    // otherwise, gradients are zeroed
+    for (unsigned int i = 0; i < grads->columns - 1; i++) {
+      grads->values[0][i] = 0;
+    }
+  }
 
   for (unsigned int i = 0; i < grads->columns; i++) {
     if (input_layer->output->values[0][i] > 0) {
@@ -178,6 +185,7 @@ void calc_layer_gradients_from_RELU(Layer *input_layer, Matrix *RELU_grads) {
 }
 
 /* Assumes layer ouput gradients have been set correctly */
+/* Assumes weight gradients for "layer" have been initialized */
 void calc_weight_gradients(Layer *layer, Matrix *layer_inputs) {
   if (layer_inputs->columns != layer->weights->rows) {
     fprintf(stderr, "ERROR: inputs != number of wieghts per set\n");
@@ -187,6 +195,12 @@ void calc_weight_gradients(Layer *layer, Matrix *layer_inputs) {
 
   if (layer->output_grads->columns != layer->weights->columns - 1) {
     fprintf(stderr, "ERROR: output gradients != sets of weights\n");
+    fprintf(stderr, "(EXIT EARLY)\n");
+    exit(1);
+  }
+
+  if (layer->weight_grads == NULL) {
+    fprintf(stderr, "ERROR: layer->weight_grads is NULL");
     fprintf(stderr, "(EXIT EARLY)\n");
     exit(1);
   }
@@ -266,6 +280,7 @@ double calc_mean_squared_loss(double output, double correct) {
   return (output - correct) * (output - correct);
 }
 
+/* Assumes loss used is mean squared */
 double calc_grad_of_input_to_loss(double output, double correct) {
   return 2.0 * (output - correct);
 }
