@@ -30,7 +30,7 @@ Test(input_grads, ingrad00)
   double output_grad[1][1] = {
     {1}
   };
-  Layer *in = init_layer(allocate_from_2D_arr(1, 2, input_arr), allocate_empty(1, 1), NULL, NULL);
+  Layer *in = init_layer(allocate_from_2D_arr(1, 2, input_arr), NULL, NULL, NULL);
   Layer *l = init_layer(NULL, NULL, allocate_from_2D_arr(2, 2, weights_arr), allocate_empty(2, 1)); 
   RELU_Layer *relu = init_RELU_layer(NULL, allocate_from_2D_arr(1, 1, output_grad));
 
@@ -59,7 +59,7 @@ Test(relu_grads, relu00)
     {1}
   };
 
-  Layer *in = init_layer(allocate_from_2D_arr(1, 2, input_arr), allocate_empty(1, 1), NULL, NULL);
+  Layer *in = init_layer(allocate_from_2D_arr(1, 2, input_arr), NULL, NULL, NULL);
   RELU_Layer *relu = init_RELU_layer(NULL, allocate_from_2D_arr(1, 1, output_grad));
   
   calc_RELU_layer(relu, in->output);
@@ -82,7 +82,7 @@ Test(relu_grads, relu01)
     {1}
   };
 
-  Layer *in = init_layer(allocate_from_2D_arr(1, 2, input_arr), allocate_empty(1, 1), NULL, NULL);
+  Layer *in = init_layer(allocate_from_2D_arr(1, 2, input_arr), NULL, NULL, NULL);
   RELU_Layer *relu = init_RELU_layer(NULL, allocate_from_2D_arr(1, 1, output_grad));
   
   calc_RELU_layer(relu, in->output);
