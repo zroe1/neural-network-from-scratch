@@ -54,3 +54,48 @@ Test(ouputs, outputs01)
   free_RELU_layer(relu);
   free_layer(l);
 }
+
+Test(squish, squish00)
+{
+  double input_arr[1][3] = {
+    {1, 3, 1}
+  };
+  Squish_Layer *l = init_squish_layer(NULL, NULL);
+  calc_squish_layer(l, allocate_from_2D_arr(1, 3, input_arr));
+
+  cr_assert(l->output->values[0][0] - 0.25 < 0.0001);
+  cr_assert(l->output->values[0][1] - 0.75 < 0.0001);
+
+  free_squish_layer(l);
+}
+
+Test(squish, squish01)
+{
+  double input_arr[1][3] = {
+    {0, 0, 1}
+  };
+  Squish_Layer *l = init_squish_layer(NULL, NULL);
+  calc_squish_layer(l, allocate_from_2D_arr(1, 3, input_arr));
+
+  cr_assert(l->output->values[0][0] - 0 < 0.0001);
+  cr_assert(l->output->values[0][1] - 0 < 0.0001);
+
+  free_squish_layer(l);
+}
+
+Test(squish, squish02)
+{
+  double input_arr[1][5] = {
+    {1, 1, 1, 1, 1}
+  };
+  Squish_Layer *l = init_squish_layer(NULL, NULL);
+  calc_squish_layer(l, allocate_from_2D_arr(1, 5, input_arr));
+
+  cr_assert(l->output->values[0][0] - 1 < 0.0001);
+  cr_assert(l->output->values[0][1] - 1 < 0.0001);
+  cr_assert(l->output->values[0][2] - 1 < 0.0001);
+  cr_assert(l->output->values[0][3] - 1 < 0.0001);
+  cr_assert(l->output->values[0][4] - 1 < 0.0001);
+
+  free_squish_layer(l);
+}
