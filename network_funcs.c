@@ -123,7 +123,18 @@ Matrix *weights_gradients_subtotal(Layer *layer) {
 Matrix *calc_layer_input_gradients(Layer *above_layer, Matrix *rv) {
   Matrix *subtotals = weights_gradients_subtotal(above_layer);
   unsigned int rv_cols = above_layer->weights->rows - 1; // -1 to ignore bias values
-  // Matrix *output_grads = allocate_empty(1, rv_cols);
+
+  // if rv matrix passed in is NULL, a new one is created to be returned
+  if (rv == NULL) {
+    rv = allocate_empty(1, rv_cols);
+  }  
+
+  // zeros out previous gradients
+  for (unsigned int i = 0; i < rv->rows; i++) {
+    for (unsigned int j = 0; j < rv->columns; j++) {
+      rv->values[i][j] = 0;
+    }
+  }
 
   for (unsigned int i = 0; i < rv_cols; i++) {
     for (unsigned int j = 0; j < subtotals->columns; j++) {
