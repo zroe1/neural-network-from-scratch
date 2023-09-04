@@ -163,9 +163,9 @@ void calc_layer_gradients_from_RELU(Layer *input_layer, Matrix *RELU_grads) {
     exit(1);
   }
 
-  Matrix *grads;
+  Matrix *grads = input_layer->output_grads;
   // if input_layer->output_grads doesn't exist, a new one must be created
-  if (input_layer->output_grads == NULL) {
+  if (grads == NULL) {
     grads = allocate_empty(1, input_layer->output->columns - 1);
   } else {
     // otherwise, gradients are zeroed

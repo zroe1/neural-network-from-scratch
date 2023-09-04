@@ -113,8 +113,31 @@ Test(relu_grads, relu00)
   free_RELU_layer(relu);
 }
 
-/* tests for zero gradient in layer before relu */
 Test(relu_grads, relu01)
+{
+  double input_arr[1][2] = {
+    {2, 1}
+  };
+  double output_grad[1][1] = {
+    {1}
+  };
+  
+  // test with initalized output gradients on input layer
+  Layer *in = init_layer(allocate_from_2D_arr(1, 2, input_arr), allocate_empty(1, 1), NULL, NULL);
+  RELU_Layer *relu = init_RELU_layer(NULL, allocate_from_2D_arr(1, 1, output_grad));
+
+  calc_RELU_layer(relu, in->output);
+  calc_layer_gradients_from_RELU(in, relu->output_grads);
+
+  cr_assert(in->output_grads->values[0][0] == 1);
+  cr_assert(relu->output_grads->values[0][0] == 1);
+
+  free_layer(in);
+  free_RELU_layer(relu);
+}
+
+/* tests for zero gradient in layer before relu */
+Test(relu_grads, relu02)
 {
   double input_arr[1][2] = {
     {-2, 1}
