@@ -48,6 +48,16 @@ void free_RELU_layer(RELU_Layer *l) {
   free(l);
 }
 
+void free_squish_layer(Squish_Layer *l) {
+  if (l->output != NULL) {
+    free_matrix(l->output);
+  }
+  if (l->output_grads != NULL) {
+    free_matrix(l->output_grads);
+  }
+  free(l);
+}
+
 Matrix *init_random_weights(unsigned int rows, unsigned int cols) {
   Matrix *rv = allocate_empty(rows, cols);
 
@@ -282,13 +292,17 @@ void calc_squish_layer(Squish_Layer *layer, Matrix *inputs) {
 
   double output_sum = 0;
   for (unsigned int i = 0; i < output->columns - 1; i++) {
-    output_sum += output->values[0][i];
+    output_sum += inputs->values[0][i];
+  }
+  
+  if (output_sum == 0) {
+    output_sum = 1; // this is to prevent divide by 0 error
   }
   for (unsigned int i = 0; i < output->columns - 1; i++) {
-    output->values[0][i] /= output_sum;
+    output->values[0][i] = inputs->values[0][i] / output_sum;
   }
   output->values[0][output->columns - 1] = 1;
-
+  layer->output = output;
   layer->output_sum = output_sum;
 }
  
