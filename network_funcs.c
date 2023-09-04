@@ -305,6 +305,29 @@ void calc_squish_layer(Squish_Layer *layer, Matrix *inputs) {
   layer->output = output;
   layer->output_sum = output_sum;
 }
+
+void calc_layer_gradients_from_squish(Layer *input_layer, Squish_Layer *squish) {
+  // print_matrix(input_layer->output);
+  if (squish->output_grads->columns != input_layer->output->columns -1) {
+    fprintf(stderr, "ERROR: squish gradients != number of input layer outputs\n");
+    fprintf(stderr, "(EXIT EARLY)\n");
+    exit(1);
+  }
+  // print_matrix(input_layer->output);
+  Matrix *grads = allocate_empty(1, input_layer->output->columns - 1);
+  // print_matrix(grads);
+  for (unsigned int i = 0; i < grads->columns; i++) {
+    double squish_grads = squish->output_grads->values[0][i];
+    double layer_total = squish->output_sum;
+    double input_val = input_layer->output->values[0][i];
+    double temp = (layer_total - input_val) / (layer_total * layer_total);
+    grads->values[0][i] += temp;
+  }
+
+  /* intermediate neuron activations aren't added up over backward passes */
+  free(input_layer->output_grads);
+  input_layer->output_grads = grads;
+}
  
 /**
  * NOTE: below functions are only for debugging purposes and printing small

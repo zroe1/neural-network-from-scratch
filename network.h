@@ -170,3 +170,5 @@ void free_squish_layer(Squish_Layer *l);
 void calc_squish_layer(Squish_Layer *layer, Matrix *inputs);
 
 void print_squish_layer(Squish_Layer *layer, char *layer_name);
+
+void calc_layer_gradients_from_squish(Layer *input_layer, Squish_Layer *squish);

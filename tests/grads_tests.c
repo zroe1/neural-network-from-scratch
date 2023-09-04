@@ -169,3 +169,25 @@ Test(loss_grad, loss_grad5)
   free_matrix(in);
   free_layer(l);
 }
+
+Test(squish, squish00)
+{
+  double input_arr[1][3] = {
+    {1, 3, 1}
+  };
+  double output_grads[1][2] = {
+    {1, 1}
+  };
+
+  Layer *in = init_layer(allocate_from_2D_arr(1, 3, input_arr), NULL, NULL, NULL);
+  Squish_Layer *l = init_squish_layer(NULL, allocate_from_2D_arr(1, 2, output_grads));
+  calc_squish_layer(l, allocate_from_2D_arr(1, 3, input_arr));
+  calc_layer_gradients_from_squish(in, l);
+
+  cr_assert(l->output->values[0][0] - 0.25 < 0.0001);
+  cr_assert(l->output->values[0][1] - 0.75 < 0.0001);
+
+  cr_assert(in->output_grads->values[0][0] - 0.1875 < 0.001);
+  cr_assert(in->output_grads->values[0][1] - 0.0625 < 0.001);
+  free_squish_layer(l);
+}
