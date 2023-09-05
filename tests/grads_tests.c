@@ -245,7 +245,7 @@ Test(squish, squish00)
 
   Layer *in = init_layer(allocate_from_2D_arr(1, 3, input_arr), NULL, NULL, NULL);
   Squish_Layer *l = init_squish_layer(NULL, allocate_from_2D_arr(1, 2, output_grads));
-  calc_squish_layer(l, allocate_from_2D_arr(1, 3, input_arr));
+  calc_squish_layer(l, allocate_from_2D_arr(1, 3, input_arr)); // TODO: fix allocation
   calc_layer_gradients_from_squish(in, l);
 
   cr_assert(l->output->values[0][0] - 0.25 < 0.0001);
@@ -254,4 +254,86 @@ Test(squish, squish00)
   cr_assert(in->output_grads->values[0][0] - 0.1875 < 0.001);
   cr_assert(in->output_grads->values[0][1] - 0.0625 < 0.001);
   free_squish_layer(l);
+}
+
+// checks to make sure backward pass doesn't crash
+Test(backward_pass, back00) {
+  double input_arr[1][11] = {
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+  };
+
+  double weights[11][11] = {
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+  };
+  Layer *in = init_layer(allocate_from_2D_arr(1, 11, input_arr), NULL, NULL, NULL);
+  Layer *l1 = init_layer(NULL, NULL, allocate_from_2D_arr(11, 11, weights), allocate_empty(11, 10));
+  RELU_Layer *relu = init_RELU_layer(NULL, NULL);
+  Layer *l2 = init_layer(NULL, NULL, allocate_from_2D_arr(11, 11, weights), allocate_empty(11, 10));
+  Squish_Layer *squish = init_squish_layer(NULL, NULL);
+
+  forward_pass(in, l1, relu, l2, squish);
+  backward_pass(in, l1, relu, l2, squish, 1);
+
+  free_layer(in);
+  free_layer(l1);
+  free_RELU_layer(relu);
+  free_layer(l2);
+  free_squish_layer(squish);
+
+  cr_assert(1);
+}
+
+// checks to make sure that output gradients don't compound but weight gradients do
+Test(backward_pass, back01) {
+  double input_arr[1][11] = {
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+  };
+
+  double weights[11][11] = {
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+  };
+
+  Layer *in = init_layer(allocate_from_2D_arr(1, 11, input_arr), NULL, NULL, NULL);
+  Layer *l1 = init_layer(NULL, NULL, allocate_from_2D_arr(11, 11, weights), allocate_empty(11, 10));
+  RELU_Layer *relu = init_RELU_layer(NULL, NULL);
+  Layer *l2 = init_layer(NULL, NULL, allocate_from_2D_arr(11, 11, weights), allocate_empty(11, 10));
+  Squish_Layer *squish = init_squish_layer(NULL, NULL);
+  
+  forward_pass(in, l1, relu, l2, squish);
+  backward_pass(in, l1, relu, l2, squish, 1);
+
+  cr_assert(l2->weight_grads->values[0][0] + 0.16 < 0.1);
+
+  forward_pass(in, l1, relu, l2, squish);
+  backward_pass(in, l1, relu, l2, squish, 1);;
+
+  cr_assert(l2->weight_grads->values[0][0] + 0.32 < 0.1);
+  cr_assert(l2->output_grads->values[0][0] - 0.16 < 0.1);
+  cr_assert(l2->output_grads->values[0][0] - 0.02 < 0.1);
+
+  free_layer(in);
+  free_layer(l1);
+  free_RELU_layer(relu);
+  free_layer(l2);
+  free_squish_layer(squish);
 }
