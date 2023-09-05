@@ -99,3 +99,33 @@ Test(squish, squish02)
 
   free_squish_layer(l);
 }
+
+Test(forward_pass, forward00)
+{
+  double input_arr[1][2] = {
+    {2, 1}
+  };
+  double weights_arr[2][2] = {
+    {-2, 0},
+    {1, 1}
+  };
+
+  Layer *in = init_layer(allocate_from_2D_arr(1, 2, input_arr), NULL, NULL, NULL);
+  Layer *l1 = init_layer(NULL, NULL, allocate_from_2D_arr(2, 2, weights_arr), NULL);
+  RELU_Layer *relu = init_RELU_layer(NULL, NULL);
+  Layer *l2 = init_layer(NULL, NULL, allocate_from_2D_arr(2, 2, weights_arr), NULL);
+  Squish_Layer *s = init_squish_layer(NULL, NULL);
+
+  forward_pass(in, l1, relu, l2, s);
+
+  cr_assert(l1->output->values[0][0] == -3);
+  cr_assert(relu->output->values[0][0] == 0);
+  cr_assert(l2->output->values[0][0] == 1);
+  cr_assert(s->output->values[0][0] == 1);
+
+  free_layer(in);
+  free_layer(l1);
+  free_RELU_layer(relu);
+  free_layer(l2);
+  free_squish_layer(s);
+}

@@ -147,8 +147,7 @@ void forward_pass(Layer *input_layer,
                   Layer *layer1,
                   RELU_Layer *layer1_RELU,
                   Layer *layer2,
-                  RELU_Layer *layer2_RELU,
-                  Layer *output_layer);
+                  Squish_Layer *squish);
 
 void backward_pass(Layer *input_layer,
                   Layer *layer1,
