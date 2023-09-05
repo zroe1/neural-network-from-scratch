@@ -150,13 +150,11 @@ void forward_pass(Layer *input_layer,
                   Squish_Layer *squish);
 
 void backward_pass(Layer *input_layer,
-                  Layer *layer1,
-                  RELU_Layer *layer1_RELU,
-                  Layer *layer2,
-                  RELU_Layer *layer2_RELU,
-                  Layer *output_layer,
-                  double loss,
-                  double correct);
+                   Layer *layer1,
+                   RELU_Layer *layer1_RELU,
+                   Layer *layer2,
+                   Squish_Layer *squish,
+                   double correct);
 
 double calc_mean_squared_loss(double output, double correct);
 

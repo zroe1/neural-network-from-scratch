@@ -200,7 +200,7 @@ void calc_weight_gradients(Layer *layer, Matrix *layer_inputs) {
   }
 
   if (layer->weight_grads == NULL) {
-    fprintf(stderr, "ERROR: layer->weight_grads is NULL");
+    fprintf(stderr, "ERROR: layer->weight_grads is NULL\n");
     fprintf(stderr, "(EXIT EARLY)\n");
     exit(1);
   }
@@ -246,29 +246,29 @@ void forward_pass(Layer *input_layer,
 }
 
 void backward_pass(Layer *input_layer,
-                  Layer *layer1,
-                  RELU_Layer *layer1_RELU,
-                  Layer *layer2,
-                  RELU_Layer *layer2_RELU,
-                  Layer *output_layer,
-                  double loss,
-                  double correct)
+                   Layer *layer1,
+                   RELU_Layer *layer1_RELU,
+                   Layer *layer2,
+                   Squish_Layer *squish,
+                   double correct)
 {
-  /* calculates the gradient for the output */
-  double output_grad = loss / output_layer->output->values[0][0];
-  if (output_layer->output->values[0][0] - correct < 0) {
-    if (output_grad > 0)
-      output_grad *= -1;
+  // checks if the output gradients for the squish layer aren't initalialized
+  if (squish->output_grads == NULL) {
+    squish->output_grads = allocate_empty(1, 10);
   }
-  double output_grads[1][1] = {{output_grad}};
-  output_layer->output_grads = allocate_from_2D_arr(1, 1, output_grads);
-
-  calc_weight_gradients(output_layer, layer2_RELU->output);
-
-  layer2_RELU->output_grads = calc_layer_input_gradients(output_layer, layer2_RELU->output_grads);
-  calc_layer_gradients_from_RELU(layer2, layer2_RELU->output_grads);
-  calc_weight_gradients(layer2, layer1_RELU->output);
   
+  for (unsigned int i = 0; i < squish->output->columns; i++) {
+    double output_grad;
+    if (i + 1 == correct) {
+      output_grad = calc_grad_of_input_to_loss(squish->output->values[0][i], 1);
+    } else {
+      output_grad = calc_grad_of_input_to_loss(squish->output->values[0][i], 0);
+    }
+    squish->output_grads->values[0][i] = output_grad;
+  }
+
+  calc_layer_gradients_from_squish(layer2, squish);
+  calc_weight_gradients(layer2, layer1_RELU->output);
   layer1_RELU->output_grads = calc_layer_input_gradients(layer2, layer1_RELU->output_grads);
   calc_layer_gradients_from_RELU(layer1, layer1_RELU->output_grads);
   calc_weight_gradients(layer1, input_layer->output);
@@ -341,11 +341,11 @@ void calc_layer_gradients_from_squish(Layer *input_layer, Squish_Layer *squish) 
   Matrix *grads = allocate_empty(1, input_layer->output->columns - 1);
   // print_matrix(grads);
   for (unsigned int i = 0; i < grads->columns; i++) {
-    double squish_grads = squish->output_grads->values[0][i];
+    double squish_grad = squish->output_grads->values[0][i];
     double layer_total = squish->output_sum;
     double input_val = input_layer->output->values[0][i];
     double temp = (layer_total - input_val) / (layer_total * layer_total);
-    grads->values[0][i] += temp;
+    grads->values[0][i] += temp * squish_grad;
   }
 
   /* intermediate neuron activations aren't added up over backward passes */
