@@ -71,3 +71,37 @@ Test(matmul, matmul01)
 
   cr_assert(1);
 }
+
+Test(flatten_matrix, flatten00)
+{
+  Matrix *m = allocate_empty(2, 2);
+  Matrix *flattened = flatten_matrix(m);
+  // print_matrix_verbose(m);
+  // print_matrix_verbose(flattened);
+
+  cr_assert(flattened->rows == 1);
+  cr_assert(flattened->columns == 4);
+
+  free_matrix(m);
+  free_matrix(flattened);
+}
+
+Test(flatten_matrix, flatten01)
+{
+  double arr[3][2] = {
+    {1, 2},
+    {3, 4},
+    {5, 6}
+  };
+
+  Matrix *m = allocate_from_2D_arr(3, 2, arr);
+  Matrix *flattened = flatten_matrix(m);
+
+  cr_assert(flattened->rows == 1);
+  cr_assert(flattened->columns == 6);
+  cr_assert(flattened->values[0][0] == 1);
+  cr_assert(flattened->values[0][5] == 6);
+
+  free_matrix(m);
+  free_matrix(flattened);
+}

@@ -62,6 +62,17 @@ Matrix *matmul(Matrix *A, Matrix *B) {
   return rv;
 }
 
+Matrix *flatten_matrix(Matrix *matrix) {
+  Matrix *rv = allocate_empty(1, matrix->rows * matrix->columns);
+  unsigned int rv_idx = 0;
+  for (unsigned int i = 0; i < matrix->rows; i++) {
+    for (unsigned int j = 0; j < matrix->columns; j++) {
+      rv->values[0][rv_idx++] = matrix->values[i][j];
+    }
+  }
+  return rv;
+}
+
 /*
  * NOTE: The following functions are for printing matrices and operations on
  * matrices. The code is writen so it is possible to print whole matrix 
