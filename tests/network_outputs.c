@@ -137,3 +137,20 @@ Test(MNIST, mnist00)
   cr_assert(labels[9999] == 6);
   free(labels);
 }
+
+Test(MNIST, mnist01)
+{
+  Matrix **imgs = load_MNIST_images("TRAINING_DATA/x_test.txt", 10000);
+  cr_assert(imgs[0]->values[7][6] - 84 < 0.0001);
+  cr_assert(imgs[1]->values[3][10] - 116 < 0.0001);
+  cr_assert(imgs[1]->values[3][9] < 0.0001);
+  cr_assert(imgs[9999]->values[21][7] - 7 < 0.001);
+
+  for (unsigned int i = 0; i< 10000; i++) {
+    if (imgs[i] != NULL) {
+      free_matrix(imgs[i]);
+    }
+  }
+
+  free(imgs);
+}

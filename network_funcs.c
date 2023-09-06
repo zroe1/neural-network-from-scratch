@@ -29,6 +29,64 @@ double *load_MNIST_lables(char *filename, unsigned int num_lines) {
   return rv;
 }
 
+Matrix **load_MNIST_images(char *filename, unsigned int num_imgs) {
+  unsigned int LINES_PER_IMG = 28;
+
+  FILE* file = fopen(filename, "r");
+  Matrix **rv = (Matrix **)malloc(sizeof(Matrix *) * num_imgs);
+  rv[0] = allocate_empty(28, 28);
+  unsigned int current_img = 0;
+  unsigned int current_img_line = 0;
+  unsigned int current_img_col = 0;
+
+  char *end_pointer;
+  char line[100];
+  char num_temp[5];
+  unsigned int num_temp_idx = 0;
+
+  while (fgets(line, sizeof(line), file)) {
+    // a line with only a newline indicates a new image
+    if (line[0] == '\n') {
+      current_img_line = 0;
+      current_img++;
+      rv[current_img] = allocate_empty(28, 28);
+
+      // else statement reads a line from an image
+    } else {
+      current_img_col = 0;
+      unsigned int current_line_idx = 0;
+
+      while (current_img_col < 28){
+        char current_char = line[current_line_idx];
+
+        if (current_char == ' ') {
+          num_temp[num_temp_idx] = '\0';
+          num_temp_idx = 0;
+          double current_num = strtod(num_temp, &end_pointer);
+
+          if (*end_pointer != '\0') {
+            printf("ERROR: line read incorrectly\n");
+            printf("*%s*\n", num_temp);
+            exit(1);
+          }
+
+          rv[current_img]->values[current_img_line][current_img_col++] = current_num;
+        } else {
+          num_temp[num_temp_idx++] = current_char;
+        }
+        current_line_idx++;
+      }
+      current_img_line++;
+    }
+  }
+  if (current_img != num_imgs) {
+    printf("ERROR: read incorrect number of images.\n");
+    printf("Check \"num_imgs\" passed into function call\n");
+    exit(1);
+  }
+  return rv;
+}
+
 Layer *init_layer(Matrix *output, 
                   Matrix *output_grads, 
                   Matrix *weights, 
