@@ -173,3 +173,5 @@ void calc_layer_gradients_from_squish(Layer *input_layer, Squish_Layer *squish);
 double *load_MNIST_lables(char *filename, unsigned int num_lines);
 
 Matrix **load_MNIST_images(char *filename, unsigned int num_imgs);
+
+void free_matrix_array(Matrix **matrix_arr, unsigned int len);

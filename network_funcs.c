@@ -33,7 +33,8 @@ Matrix **load_MNIST_images(char *filename, unsigned int num_imgs) {
   unsigned int LINES_PER_IMG = 28;
 
   FILE* file = fopen(filename, "r");
-  Matrix **rv = (Matrix **)malloc(sizeof(Matrix *) * num_imgs);
+  // initialized with calloc so it is possible to check for NULL pointers
+  Matrix **rv = (Matrix **)calloc(num_imgs, sizeof(Matrix *));
   rv[0] = allocate_empty(28, 28);
   unsigned int current_img = 0;
   unsigned int current_img_line = 0;
@@ -85,6 +86,15 @@ Matrix **load_MNIST_images(char *filename, unsigned int num_imgs) {
     exit(1);
   }
   return rv;
+}
+
+void free_matrix_array(Matrix **matrix_arr, unsigned int len) {
+  for (unsigned int i = 0; i< len; i++) {
+    if (matrix_arr[i] != NULL) {
+      free_matrix(matrix_arr[i]);
+    }
+  }
+  free(matrix_arr);
 }
 
 Layer *init_layer(Matrix *output, 

@@ -147,10 +147,11 @@ Test(MNIST, mnist01)
   cr_assert(imgs[9999]->values[21][7] - 7 < 0.001);
 
   for (unsigned int i = 0; i< 10000; i++) {
-    if (imgs[i] != NULL) {
-      free_matrix(imgs[i]);
+    if (imgs[i] == NULL) {
+      fprintf(stderr, "ERROR: didn't initalize all images.\n");
+      cr_assert(0);
     }
   }
 
-  free(imgs);
+  free_matrix_array(imgs, 10000);
 }
