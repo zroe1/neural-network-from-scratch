@@ -2,6 +2,33 @@
 #include <stdlib.h>
 #include "network.h"
 
+double *load_MNIST_lables(char *filename, unsigned int num_lines) {
+  FILE* file = fopen(filename, "r");
+  double *rv = (double *)malloc(sizeof(double) * num_lines);
+  unsigned int counter = 0;
+
+  char *end_pointer;
+  char line[3];
+
+  while (fgets(line, sizeof(line), file)) {
+    line[1] = '\0';
+    rv[counter] = strtod(line, &end_pointer);
+
+    if (*end_pointer != '\0') {
+      printf("ERROR: line read incorrectly\n");
+      exit(1);
+    }
+    counter++;
+  }
+
+  if (counter != num_lines) {
+    free(rv);
+    printf("ERROR: read incorrect number of lines.\n");
+    exit(1);
+  }
+  return rv;
+}
+
 Layer *init_layer(Matrix *output, 
                   Matrix *output_grads, 
                   Matrix *weights, 

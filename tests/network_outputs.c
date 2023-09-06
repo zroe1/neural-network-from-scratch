@@ -129,3 +129,11 @@ Test(forward_pass, forward00)
   free_layer(l2);
   free_squish_layer(s);
 }
+
+Test(MNIST, mnist00)
+{
+  double *labels = load_MNIST_lables("TRAINING_DATA/y_test.txt", 10000);
+  cr_assert(labels[0] == 7);
+  cr_assert(labels[9999] == 6);
+  free(labels);
+}
