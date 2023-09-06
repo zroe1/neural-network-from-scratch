@@ -93,7 +93,7 @@ static unsigned int len_of_num(double num) {
 /* NOTE: this helper function exists and is written like this becuase it 
 makes it easier to print out operations involving multiple matrices */
 void print_matrix_row(Matrix *matrix, int row) {
-  unsigned int space_per_num = 8;
+  unsigned int space_per_num = 12;
 
   if (row == -1) {
     // prints empty row

@@ -393,7 +393,7 @@ void calc_squish_layer(Squish_Layer *layer, Matrix *inputs) {
     exit(1);
   }
 
-  double min_input = inputs->values[0][0];
+  double min_input = 0;
   for (unsigned int i = 0; i < inputs->columns - 1; i++) {
     if (inputs->values[0][i] < min_input) {
       min_input = inputs->values[0][i];
@@ -407,18 +407,22 @@ void calc_squish_layer(Squish_Layer *layer, Matrix *inputs) {
     for (unsigned int i = 0; i < inputs->columns - 1; i++) {
       output->values[0][i] = inputs->values[0][i] + to_add;
     }
+  } else {
+    for (unsigned int i = 0; i < inputs->columns - 1; i++) {
+      output->values[0][i] = inputs->values[0][i];
+    }
   }
 
   double output_sum = 0;
   for (unsigned int i = 0; i < output->columns - 1; i++) {
-    output_sum += inputs->values[0][i];
+    output_sum += output->values[0][i];
   }
   
   if (output_sum == 0) {
     output_sum = 1; // this is to prevent divide by 0 error
   }
   for (unsigned int i = 0; i < output->columns - 1; i++) {
-    output->values[0][i] = inputs->values[0][i] / output_sum;
+    output->values[0][i] = output->values[0][i] / output_sum;
   }
   output->values[0][output->columns - 1] = 1;
   layer->output = output;
