@@ -155,3 +155,20 @@ Test(MNIST, mnist01)
 
   free_matrix_array(imgs, 10000);
 }
+
+Test(MNIST, mnist02)
+{
+  Matrix **imgs = load_MNIST_images("TRAINING_DATA/x_train.txt", 60000);
+
+  cr_assert(imgs[59999]->values[24][7] - 73 < 0.0001); // 24, 4 -> 73
+  cr_assert(imgs[59999]->values[24][4] - 136 < 0.0001);
+
+  for (unsigned int i = 0; i < 60000; i++) {
+    if (imgs[i] == NULL) {
+      fprintf(stderr, "ERROR: didn't initalize all images.\n");
+      cr_assert(0);
+    }
+  }
+
+  free_matrix_array(imgs, 60000);
+}
