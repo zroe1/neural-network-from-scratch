@@ -75,12 +75,10 @@ Test(matmul, matmul01)
 Test(flatten_matrix, flatten00)
 {
   Matrix *m = allocate_empty(2, 2);
-  Matrix *flattened = flatten_matrix(m);
-  // print_matrix_verbose(m);
-  // print_matrix_verbose(flattened);
+  Matrix *flattened = flatten_matrix_and_append_one(m);
 
   cr_assert(flattened->rows == 1);
-  cr_assert(flattened->columns == 4);
+  cr_assert(flattened->columns == 5);
 
   free_matrix(m);
   free_matrix(flattened);
@@ -95,12 +93,13 @@ Test(flatten_matrix, flatten01)
   };
 
   Matrix *m = allocate_from_2D_arr(3, 2, arr);
-  Matrix *flattened = flatten_matrix(m);
+  Matrix *flattened = flatten_matrix_and_append_one(m);
 
   cr_assert(flattened->rows == 1);
-  cr_assert(flattened->columns == 6);
+  cr_assert(flattened->columns == 7);
   cr_assert(flattened->values[0][0] == 1);
   cr_assert(flattened->values[0][5] == 6);
+  cr_assert(flattened->values[0][6] == 1);
 
   free_matrix(m);
   free_matrix(flattened);

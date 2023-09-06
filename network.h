@@ -176,4 +176,4 @@ Matrix **load_MNIST_images(char *filename, unsigned int num_imgs);
 
 void free_matrix_array(Matrix **matrix_arr, unsigned int len);
 
-Matrix *flatten_matrix(Matrix *matrix);
+Matrix *flatten_matrix_and_append_one(Matrix *matrix);

@@ -62,14 +62,15 @@ Matrix *matmul(Matrix *A, Matrix *B) {
   return rv;
 }
 
-Matrix *flatten_matrix(Matrix *matrix) {
-  Matrix *rv = allocate_empty(1, matrix->rows * matrix->columns);
+Matrix *flatten_matrix_and_append_one(Matrix *matrix) {
+  Matrix *rv = allocate_empty(1, matrix->rows * matrix->columns + 1);
   unsigned int rv_idx = 0;
   for (unsigned int i = 0; i < matrix->rows; i++) {
     for (unsigned int j = 0; j < matrix->columns; j++) {
       rv->values[0][rv_idx++] = matrix->values[i][j];
     }
   }
+  rv->values[0][rv_idx] = 1;
   return rv;
 }
 
