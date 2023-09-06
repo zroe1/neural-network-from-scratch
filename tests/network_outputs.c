@@ -140,6 +140,14 @@ Test(MNIST, mnist00)
 
 Test(MNIST, mnist01)
 {
+  double *labels = load_MNIST_lables("TRAINING_DATA/y_train.txt", 60000);
+  cr_assert(labels[0] == 5);
+  cr_assert(labels[59999] == 8);
+  free(labels);
+}
+
+Test(MNIST, mnist02)
+{
   Matrix **imgs = load_MNIST_images("TRAINING_DATA/x_test.txt", 10000);
   cr_assert(imgs[0]->values[7][6] - 84 < 0.0001);
   cr_assert(imgs[1]->values[3][10] - 116 < 0.0001);
@@ -156,7 +164,7 @@ Test(MNIST, mnist01)
   free_matrix_array(imgs, 10000);
 }
 
-Test(MNIST, mnist02)
+Test(MNIST, mnist03)
 {
   Matrix **imgs = load_MNIST_images("TRAINING_DATA/x_train.txt", 60000);
 
