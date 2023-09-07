@@ -447,7 +447,7 @@ void calc_layer_gradients_from_squish(Layer *input_layer, Squish_Layer *squish) 
       }
     }
   }
-  // print_matrix(grads);
+
   for (unsigned int i = 0; i < grads->columns; i++) {
     double squish_grad = squish->output_grads->values[0][i];
     double layer_total = squish->output_sum;

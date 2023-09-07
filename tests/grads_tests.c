@@ -245,7 +245,7 @@ Test(squish, squish00)
 
   Layer *in = init_layer(allocate_from_2D_arr(1, 3, input_arr), NULL, NULL, NULL);
   Squish_Layer *l = init_squish_layer(NULL, allocate_from_2D_arr(1, 2, output_grads));
-  calc_squish_layer(l, allocate_from_2D_arr(1, 3, input_arr)); // TODO: fix allocation
+  calc_squish_layer(l, in->output);
   calc_layer_gradients_from_squish(in, l);
 
   cr_assert(l->output->values[0][0] - 0.25 < 0.0001);

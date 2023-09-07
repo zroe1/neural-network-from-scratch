@@ -39,12 +39,6 @@ int main() {
   Squish_Layer *squish = init_squish_layer(NULL, NULL);
 
   for (unsigned int epoch = 0; epoch < 30; epoch++) {
-    /*
-    if (epoch != 0 && epoch % 5 == 0) {
-      LEARNING_RATE -= 0.0001;
-      printf("LEARNING RATE: %f\n", LEARNING_RATE);
-    }
-    */
     double epoch_loss = 0;
 
     for (unsigned int current_img = 0; current_img < NUM_IMGS; current_img++) {
