@@ -1,5 +1,5 @@
 # Neural network with only stdio.h and stdlib.h in C  
-<img src="https://img.shields.io/badge/Data-MNIST-black">  <img src="https://img.shields.io/badge/Accuracy-70.7-d6fc2d">
+<img src="https://img.shields.io/badge/Data-MNIST-black">  <img src="https://img.shields.io/badge/Accuracy-70.7-d6fc2d">  <img src="https://img.shields.io/badge/tests-passing-brightgreen">
 
 This repository includes code for a fully functional neural network using only stdio.h and stdlib.h in C. Preforming matrix multiplication, calculating derivatives, and updating gradients is all done without any outside libraries.
 
