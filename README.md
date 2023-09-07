@@ -3,10 +3,19 @@
 
 This repository includes code for a fully functional neural network using only stdio.h and stdlib.h in C. Preforming matrix multiplication, calculating derivatives, and updating gradients is all done without any outside libraries.
 
+The code is then tested on the famous MNIST handwritten digit dataset. The accuracy of the model is 70.7% on images not present in the training data, but I suspect this number would be higher if it were not for the contraints of only using stdio.h and stdlib.h in C, as I discuss more below.
+
 ## Model architecture
+
+The model architecture is almost identical to the [MNIST model](https://www.tensorflow.org/datasets/keras_example) in the TensorFlow documentation. Both models take in a flattened image, have one fully connected layer with 128 outputs (activation RELU), followed by another layer with 10 outputs. 
+
+The main difference is between the loss. The TensorFlow model specifies "SparseCategoricalCrossentropy" as the loss which applies the softmax function to the model outputs (shown below). 
 
 <b>Softmax layer:</b>  
 <img width="535" alt="Screenshot 2023-09-07 at 5 19 35 PM" src="https://github.com/zroe1/neural-network-from-scratch/assets/114773939/ceddfeaf-4476-4df7-8af1-d97967f691c2">  
+
+This sadly cannot easily be calculated without importing the math.h library in C. I wanted to stick to only using stdio.h and stdlib.h to challenge myself as an ML engineer so I chose a substitution that works without any extra imports. I don't know if there is a technical term for this calculation but I call it the "squish" layer (shown below).
+
 <b>"Squish" layer:</b>  
 <img width="517" alt="Screenshot 2023-09-07 at 5 19 26 PM" src="https://github.com/zroe1/neural-network-from-scratch/assets/114773939/2657755b-be4f-4c05-919b-dda94c4612ab">
 
