@@ -19,22 +19,32 @@ This sadly cannot easily be calculated without importing the math.h library in C
 <b>"Squish" layer:</b>  
 <img width="517" alt="Screenshot 2023-09-07 at 5 19 26 PM" src="https://github.com/zroe1/neural-network-from-scratch/assets/114773939/2657755b-be4f-4c05-919b-dda94c4612ab">
 
-## Optimizer
+## Notes on preformance
 
-The model uses Stochastic Gradient Descent (SGD) to update gradients. The learning rate I have found works best is 10<sup>-3</sup>.
+I have a few guesses why the preformance of the network is only ~70%, while other networks of similar architecture typically score well above 90%.
+
+<ol>
+  <li>The differences in model architecture (described above), made necessary by the contrains of the project could be causing bad gradient updates.</li>
+  <li>I could be choosing a bad loss function (I have not experiemented with loss functions other than mean squared error).</li>
+  <li>There could be an error somewhere in the code that I am missing.</li>
+</ol>
+
+If I had to guess, it probably is some combination of 1 & 2. The problem with fixing either of these problems is it would be very difficult to do well only using stdlib.h and stdio.h (this is less true for #2 but it still applies).
+
+## Optimizer and loss
+
+The model uses stochastic gradient descent (SGD) and a mean squared error loss to update gradients. The network is also designed to work with regular gradient descent, where the gradient is calculated by factoring in each image in the training data. The learning rate I have found works best is 10<sup>-3</sup>.
 
 ## Running the code
 
-```
-clang train.c network_funcs.c linalg.c
-```
-Run the command above in terminal. The output will display the loss for each epoch and the overall accuracy of the model.
+The data is currently stored on my computer in a formatted text file that is too big to upload to GitHub. I am currently working on a way for others to load trained models locally.
 
 ## Next steps
 
 I am going to take a break on this project for a while after I complete the steps below.
 
 <ol>
+  <li>Create a system to save weights and reload models</li>
   <li>Use valgrind to confirm that all allocated memory is freed</li>
   <li>Write docstrings for each function in the header file</li>
   <li>Remove hardcoded values in train.c and replace them with constants</li>
