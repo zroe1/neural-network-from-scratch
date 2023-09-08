@@ -21,8 +21,24 @@ This sadly cannot easily be calculated without importing the math.h library in C
 
 ## Optimizer
 
+The model uses Stochastic Gradient Descent (SGD) to update gradients. The learning rate I have found works best is 10<sup>-3</sup>.
+
 ## Running the code
+
+```
+clang train.c network_funcs.c linalg.c
+```
+Run the command above in terminal. The output will display the loss for each epoch and the overall accuracy of the model.
 
 ## Next steps
 
-<p align="center"><img width="70%" alt="Screenshot 2023-09-05 at 2 00 32 PM" src="https://github.com/zroe1/neural-network-from-scratch/assets/114773939/e7ec83eb-38ca-4cde-9f18-950832b5bcee"></p>  
+I am going to take a break on this project for a while after I complete the steps below.
+
+<ol>
+  <li>Use valgrind to confirm that all allocated memory is freed</li>
+  <li>Write docstrings for each function in the header file</li>
+  <li>Remove hardcoded values in train.c and replace them with constants</li>
+</ol>
+
+Thanks for reading. Made with ❤️ and C.
+<p align="center"><img width="100%" alt="Screenshot 2023-09-05 at 2 00 32 PM" src="https://github.com/zroe1/neural-network-from-scratch/assets/114773939/e7ec83eb-38ca-4cde-9f18-950832b5bcee"></p>  
