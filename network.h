@@ -28,8 +28,6 @@ typedef struct {
   Matrix *output_grads;
 } Squish_Layer;
 
-void print_matrix_row(Matrix *matrix, int row);
-
 /**
  * Prints a matrix to standard output.
  * 
@@ -43,6 +41,8 @@ void print_matrix(Matrix *matrix);
  * @param matrix The matrix to be printed.
  */
 void print_matrix_verbose(Matrix *matrix);
+
+void print_matrix_row(Matrix *matrix, int row);
 
 /**
  * Allocates a matrix and it's values (initialized to 0) to the heap.
@@ -90,29 +90,33 @@ Matrix *matmul(Matrix *A, Matrix *B);
  */
 void print_matmul(Matrix *A, Matrix *B);
 
-/**
- * Calculates the dot product of two vectors and returns the answer as a
- * scalar.
- * 
- * @param vec1 A size 1 x n or n x 1 matrix to represent a vector
- * @param vec2 A size 1 x n or n x 1 matrix to represent a vector
- * @return The dot product of the input vectors
- */
-double dot_product(Matrix *vec1, Matrix *vec2);
-
-void print_dot(Matrix *A, Matrix *B);
-
 Layer *init_layer(Matrix *output, 
                   Matrix *output_grads, 
                   Matrix *weights, 
                   Matrix *weight_grads);
 
+/**
+ * Frees all associated memory with a RELU layer.
+ * 
+ * @param l an allocated RELU layer
+ */
 void free_RELU_layer(RELU_Layer *l);
 
+/**
+ * Frees all associated memory with a layer.
+ * 
+ * @param l an allocated layer
+ */
 void free_layer(Layer *l);
 
 RELU_Layer *init_RELU_layer(Matrix *output, Matrix *output_grads);
 
+/**
+ * Changes a Matrix struct representing a set of gradients so each value in the
+ * matrix is 0.
+ * 
+ * @param grads A matrix representing a set of gradients.
+ */
 void zero_gradients(Matrix *grads);
 
 /**
@@ -158,8 +162,8 @@ void calc_RELU_layer(RELU_Layer *relu, Matrix *input);
  * Calculates the output gradients for a given layer, given that there is a
  * RELU layer directly above it. 
  * 
- * @param relu an allocated RELU layer
- * @param input the input to a RELU layer
+ * @param input_layer an allocated layer
+ * @param RELU_grads a matrix representing the gradients of the RELU output
  */
 void calc_layer_gradients_from_RELU(Layer *input_layer, Matrix *RELU_grads);
 
@@ -212,12 +216,40 @@ double calc_mean_squared_loss(double output, double correct);
 
 double calc_grad_of_input_to_loss(double ouput, double correct);
 
+/**
+ * Allocates a squish layer with the output and output gradients that are passed
+ * in through the function.
+ * 
+ * @param output Matrix representing layer output
+ * @param output_grads Matrix representing layer output gradients
+ * @return An allocated squish layer
+ */
 Squish_Layer *init_squish_layer(Matrix *output, Matrix *output_grads);
 
+/**
+ * Frees all associated memory with a squish layer.
+ * 
+ * @param l an allocated squish layer
+ */
 void free_squish_layer(Squish_Layer *l);
 
+/**
+ * Calculates the output of a "squish" layer. More information about this
+ * calculation can be found in README.md.
+ * 
+ * @param layer an allocated squish layer
+ * @param inputs A matrix representing the input to the squish layer
+ */
 void calc_squish_layer(Squish_Layer *layer, Matrix *inputs);
 
+/**
+ * Calculates the output gradients for a given layer, given that there is a
+ * "squish" layer directly above it. The new gradients are stored in 
+ * "input_layer"
+ * 
+ * @param input_layer an allocated layer
+ * @param squish an allocated squish layer
+ */
 void calc_layer_gradients_from_squish(Layer *input_layer, Squish_Layer *squish);
 
 /**
@@ -225,6 +257,7 @@ void calc_layer_gradients_from_squish(Layer *input_layer, Squish_Layer *squish);
  * 
  * @param filename Name of the file to be read
  * @param num_lines The number of expected lines
+ * @return A list of doubles representing image labels
  */
 double *load_MNIST_lables(char *filename, unsigned int num_lines);
 
@@ -233,6 +266,7 @@ double *load_MNIST_lables(char *filename, unsigned int num_lines);
  * 
  * @param filename Name of the file to be read
  * @param num_imgs The number of expected images
+ * @return A list of Matrix structs representing MNIST images
  */
 Matrix **load_MNIST_images(char *filename, unsigned int num_imgs);
 
@@ -244,4 +278,10 @@ Matrix **load_MNIST_images(char *filename, unsigned int num_imgs);
  */
 void free_matrix_array(Matrix **matrix_arr, unsigned int len);
 
+/**
+ * Flattens a matrix so it's shape is 1 * n and appends a one to the end.
+ * 
+ * @param matrix Matrix to be flattened
+ * @return The flattened matrix
+ */
 Matrix *flatten_matrix_and_append_one(Matrix *matrix);
