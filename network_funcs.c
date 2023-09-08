@@ -88,6 +88,14 @@ Matrix **load_MNIST_images(char *filename, unsigned int num_imgs) {
   return rv;
 }
 
+void normalize_img_matrix(Matrix *img) {
+  for (unsigned int i = 0; i < img->rows; i++) {
+    for (unsigned int j = 0; j < img->columns; j++) {
+      img->values[i][j] /= 255;
+    }
+  }
+}
+
 void free_matrix_array(Matrix **matrix_arr, unsigned int len) {
   for (unsigned int i = 0; i< len; i++) {
     if (matrix_arr[i] != NULL) {
@@ -325,6 +333,11 @@ void gradient_descent_on_layer(Layer *layer, double learning_rate) {
       weights->values[i][j] -= weight_grads->values[i][j] * learning_rate;
     }
   }
+}
+
+void gradient_descent(Layer *layer1, Layer *layer2, double learning_rate) {
+  gradient_descent_on_layer(layer2, learning_rate);
+  gradient_descent_on_layer(layer1, learning_rate);
 }
 
 void forward_pass(Layer *input_layer,

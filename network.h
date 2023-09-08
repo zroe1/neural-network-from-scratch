@@ -354,3 +354,18 @@ void free_matrix_array(Matrix **matrix_arr, unsigned int len);
  * @return The flattened matrix
  */
 Matrix *flatten_matrix_and_append_one(Matrix *matrix);
+
+/**
+ * Updates weights on layers 1 and 2 based on their weight gradients.
+ * 
+ * @param layer1 The first layer in the network (fully connected)
+ * @param layer2 The second layer in the network (fully connected)
+ */
+void gradient_descent(Layer *layer1, Layer *layer2, double learning_rate);
+
+/**
+ * Normalizes a 1 channel image by dividing each pixel value by 255.0
+ * 
+ * @param img Image to be normalized.
+ */
+void normalize_img_matrix(Matrix *img);

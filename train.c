@@ -4,19 +4,6 @@
 
 double LEARNING_RATE = 0.001;
 
-void gradient_descent(Layer *layer1, Layer *layer2) {
-  gradient_descent_on_layer(layer2, LEARNING_RATE);
-  gradient_descent_on_layer(layer1, LEARNING_RATE);
-}
-
-void normalize_img_matrix(Matrix *img) {
-  for (unsigned int i = 0; i < img->rows; i++) {
-    for (unsigned int j = 0; j < img->columns; j++) {
-      img->values[i][j] /= 255;
-    }
-  }
-}
-
 int main() {
   printf("LEARNING RATE: %f\n", LEARNING_RATE);
   unsigned int NUM_IMGS = 60000;
@@ -57,7 +44,7 @@ int main() {
       }
 
       backward_pass(in, l1, relu, l2, squish, correct);
-      gradient_descent(l1, l2);
+      gradient_descent(l1, l2, LEARNING_RATE);
       zero_gradients(l1->weight_grads);
       zero_gradients(l2->weight_grads);
     }
