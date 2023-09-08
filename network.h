@@ -42,6 +42,15 @@ void print_matrix(Matrix *matrix);
  */
 void print_matrix_verbose(Matrix *matrix);
 
+/**
+ * Prints one row of a matrix. If row passed in is -1 it prints the top padding
+ * row. If row passed in is equal to the number of rows in the matrix, it prints
+ * the bottom padding row. This function is designed to help do complex printing
+ * operations.
+ * 
+ * @param matrix The matrix to be printed.
+ * @param row The row of the matrix to be printed.
+ */
 void print_matrix_row(Matrix *matrix, int row);
 
 /**
@@ -90,6 +99,16 @@ Matrix *matmul(Matrix *A, Matrix *B);
  */
 void print_matmul(Matrix *A, Matrix *B);
 
+/**
+ * Initializes a layer with the output, output gradients, wieghts, and weight
+ * gradients passed into the function.
+ * 
+ * @param output Matrix representing layer output
+ * @param output_grads Matrix representing layer output gradients
+ * @param weights Matrix representing layer weights
+ * @param weight_grads Matrix representing layer weight gradients
+ * @return A freshly allocated layer.
+ */
 Layer *init_layer(Matrix *output, 
                   Matrix *output_grads, 
                   Matrix *weights, 
@@ -195,16 +214,51 @@ void print_RELU_layer(RELU_Layer *layer, char *layer_name);
  */
 void print_squish_layer(Squish_Layer *layer, char *layer_name);
 
+/**
+ * Calculates the weight gradients of a layer given the layer and the layer
+ * inputs.
+ * 
+ * @param layer an allocated layer.
+ * @param layer_inputs A matrix representing the inputs to a layer.
+ */
 void calc_weight_gradients(Layer *layer, Matrix *layer_inputs);
 
+/**
+ * Updates the layer weights based on the weight gradients and learning rate.
+ * 
+ * @param layer an allocated layer.
+ * @param learning_rate a small number the gradient is multiplied by to 
+ *                      determine the size of change for a weight.
+ */
 void gradient_descent_on_layer(Layer *layer, double learning_rate);
 
+/**
+ * Calculates the output of a neural network with the architecture described in
+ * the README.md file.
+ * 
+ * @param input_layer The input layer to the network
+ * @param layer1 The first layer in the network (fully connected)
+ * @param layer1_RELU RELU layer to be applied to first layer
+ * @param layer2 The second layer in the network (fully connected)
+ * @param squish The "squish" layer described in README.md
+ */
 void forward_pass(Layer *input_layer,
                   Layer *layer1,
                   RELU_Layer *layer1_RELU,
                   Layer *layer2,
                   Squish_Layer *squish);
 
+/**
+ * Calculates the gradients of the weights and outputs in the netwrok with the 
+ * architecture described in the README.md file.
+ * 
+ * @param input_layer The input layer to the network
+ * @param layer1 The first layer in the network (fully connected)
+ * @param layer1_RELU RELU layer to be applied to first layer
+ * @param layer2 The second layer in the network (fully connected)
+ * @param squish The "squish" layer described in README.md
+ * @param correct The correct label for the previous forward pass
+ */
 void backward_pass(Layer *input_layer,
                    Layer *layer1,
                    RELU_Layer *layer1_RELU,
@@ -212,8 +266,23 @@ void backward_pass(Layer *input_layer,
                    Squish_Layer *squish,
                    double correct);
 
+/**
+ * Calculates the mean squared loss of a single output.
+ * 
+ * @param output A single output.
+ * @param correct The correct value for a single ouput.
+ * @return The mean squared loss.
+ */
 double calc_mean_squared_loss(double output, double correct);
 
+/**
+ * Calculates the gradient of a single output assuming the use of mean squared 
+ * loss.
+ * 
+ * @param output A single output.
+ * @param correct The correct value for a single ouput.
+ * @return The gradient of the output.
+ */
 double calc_grad_of_input_to_loss(double ouput, double correct);
 
 /**
