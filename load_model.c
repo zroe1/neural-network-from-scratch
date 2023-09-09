@@ -39,9 +39,13 @@ int main() {
   Layer *l2 = init_layer(NULL, NULL, init_random_weights(129, 11), allocate_empty(129, 10));
   Squish_Layer *squish = init_squish_layer(NULL, NULL);
 
-  load_weights("layer1_weights.txt", l1->weights);
-  load_weights("layer2_weights.txt", l2->weights);
-
+  char *LAYER_1_FILE = "layer1_weights.txt";
+  char *LAYER_2_FILE = "layer2_weights.txt";
+  load_weights(LAYER_1_FILE, l1->weights);
+  load_weights(LAYER_2_FILE, l2->weights);
+  printf("Loaded layer #1 weights from \"%s\"\n", LAYER_1_FILE);
+  printf("Loaded layer #2 weights from \"%s\"\n", LAYER_2_FILE);
+  printf("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
 
   unsigned int NUM_TEST_IMGS = 10000;
   Matrix **test_imgs = load_MNIST_images("TEST_DATA/x_test.txt", NUM_TEST_IMGS);
@@ -57,7 +61,7 @@ int main() {
   free_matrix_array(test_imgs, NUM_TEST_IMGS);
 
   double accuracy = 0;
-  for (unsigned int current_img = 0; current_img < 10000; current_img++) {
+  for (unsigned int current_img = 0; current_img < NUM_TEST_IMGS; current_img++) {
     in->output = flattened_test_imgs[current_img];
     double correct = test_labels[current_img];
 
@@ -74,8 +78,12 @@ int main() {
       accuracy += 1;
     }
   }
+
+  printf("\nImages tested: %d\n", NUM_TEST_IMGS);
+  printf("Correctly classified: %d\n", (int)accuracy);
+  printf("Incorrectly classified: %d\n", NUM_TEST_IMGS - (int)accuracy);
   accuracy /= 10000;
-  printf("accuracy: %.1f%%\n", accuracy * 100);
+  printf("Accuracy: %.1f%%\n\n", accuracy * 100);
 
   free(test_labels);
   free_matrix_array(flattened_test_imgs, NUM_TEST_IMGS);
