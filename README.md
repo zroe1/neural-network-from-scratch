@@ -37,16 +37,25 @@ The model uses stochastic gradient descent (SGD) and a mean squared error loss t
 
 ## Running the code
 
-The data is currently stored on my computer in a formatted text file that is too big to upload to GitHub. I am currently working on a way for others to load trained models locally.
+To load the model I trained run:
+```
+make load
+./load
+```
+Because the Makefile is configured to my computer this command may fail. To troubleshoot this, you can compile the necessary files manually using your favorite C compiler. Mine is Clang:
+```
+clang -o load load_model.c linalg.c network_funcs.c
+./load
+```
+
+Running either of these commands will give detailed information about the model's performance on a testing dataset.
 
 ## Next steps
 
 I am going to take a break on this project for a while after I complete the steps below.
 
 <ol>
-  <li>Create a system to save weights and reload models</li>
   <li>Use valgrind to confirm that all allocated memory is freed</li>
-  <li>Write docstrings for each function in the header file</li>
   <li>Remove hardcoded values in train.c and replace them with constants</li>
 </ol>
 
