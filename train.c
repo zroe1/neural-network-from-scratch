@@ -13,6 +13,7 @@ void save_weights(Matrix *weights, char *filename) {
       fprintf(weights_file, "%f\n", weights->values[i][j]);
     }
   }
+  fclose(weights_file);
 }
 
 int main() {
@@ -36,10 +37,10 @@ int main() {
   Layer *l2 = init_layer(NULL, NULL, init_random_weights(129, 11), allocate_empty(129, 10));
   Squish_Layer *squish = init_squish_layer(NULL, NULL);
 
-  for (unsigned int epoch = 0; epoch < NUM_EPOCHS; epoch++) {
+  for (unsigned int epoch = 0; epoch < NUM_EPOCHS - NUM_EPOCHS + 1; epoch++) {
     double epoch_loss = 0;
 
-    for (unsigned int current_img = 0; current_img < NUM_IMGS; current_img++) {
+    for (unsigned int current_img = 0; current_img < NUM_IMGS -  NUM_IMGS + 1; current_img++) {
       in->output = flattened_imgs[current_img];
       double correct = labels[current_img];
 
@@ -106,5 +107,9 @@ int main() {
   free(labels);
   free_matrix_array(flattened_imgs, NUM_IMGS);
   free(in); // output matrix for this layer has already been freed
+  free_layer(l1);
+  free_layer(l2);
+  free_squish_layer(squish);
+  free_RELU_layer(relu);
   return 0;
 }

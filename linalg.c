@@ -36,6 +36,9 @@ Matrix *allocate_from_2D_arr(unsigned int rows, unsigned int columns,
 }
 
 void free_matrix(Matrix *matrix) {
+  if (matrix == NULL) {
+    return;
+  }
   for (unsigned int i = 0; i < matrix->rows; i++) {
     free(matrix->values[i]);
   }

@@ -26,6 +26,7 @@ double *load_MNIST_lables(char *filename, unsigned int num_lines) {
     printf("ERROR: read incorrect number of lines.\n");
     exit(1);
   }
+  fclose(file);
   return rv;
 }
 
@@ -48,9 +49,11 @@ Matrix **load_MNIST_images(char *filename, unsigned int num_imgs) {
   while (fgets(line, sizeof(line), file)) {
     // a line with only a newline indicates a new image
     if (line[0] == '\n') {
-      current_img_line = 0;
-      current_img++;
-      rv[current_img] = allocate_empty(28, 28);
+      if (current_img + 1 < num_imgs) {
+        current_img_line = 0;
+        current_img++;
+        rv[current_img] = allocate_empty(28, 28);
+      }
 
       // else statement reads a line from an image
     } else {
@@ -80,11 +83,12 @@ Matrix **load_MNIST_images(char *filename, unsigned int num_imgs) {
       current_img_line++;
     }
   }
-  if (current_img != num_imgs) {
+  if (current_img + 1 != num_imgs) {
     printf("ERROR: read incorrect number of images.\n");
     printf("Check \"num_imgs\" passed into function call\n");
     exit(1);
   }
+  fclose(file);
   return rv;
 }
 
@@ -200,6 +204,7 @@ void calc_layer_output(Layer *layer, Matrix *input) {
     fprintf(stderr, "inproper matrix multiplication");
     exit(1);
   }
+  free_matrix(layer->output);
   layer->output = matmul(input, layer->weights);
 }
 
@@ -242,7 +247,7 @@ Matrix *calc_layer_input_gradients(Layer *above_layer, Matrix *rv) {
       rv->values[0][i] += subtotals->values[i][j];
     }
   }
-
+  free_matrix(subtotals);
   return rv;
 }
 
@@ -256,6 +261,7 @@ void calc_RELU_layer(RELU_Layer *relu, Matrix *input) {
       output->values[0][i] = 0;
     }
   }
+  free_matrix(relu->output);
   relu->output = output;
 }
 
@@ -364,7 +370,7 @@ void backward_pass(Layer *input_layer,
     squish->output_grads = allocate_empty(1, 10);
   }
   
-  for (unsigned int i = 0; i < squish->output->columns; i++) {
+  for (unsigned int i = 0; i < squish->output->columns - 1; i++) {
     double output_grad;
     if (i + 1 == correct) {
       output_grad = calc_grad_of_input_to_loss(squish->output->values[0][i], 1);
@@ -412,7 +418,7 @@ void calc_squish_layer(Squish_Layer *layer, Matrix *inputs) {
     }
   }
 
-  free(layer->output);
+  free_matrix(layer->output);
   Matrix *output = allocate_empty(inputs->rows, inputs->columns);
   if (min_input < 0) {
     double to_add = -min_input;

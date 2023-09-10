@@ -1,5 +1,6 @@
 #include <criterion/criterion.h>
 #include "../network.h"
+#include <stdio.h>
 
 /* test for relu layer to keep positive values unchanged */
 Test(ouputs, outputs00)
@@ -132,7 +133,7 @@ Test(forward_pass, forward00)
 
 Test(MNIST, mnist00)
 {
-  double *labels = load_MNIST_lables("TRAINING_DATA/y_test.txt", 10000);
+  double *labels = load_MNIST_lables("TEST_DATA/y_test.txt", 10000);
   cr_assert(labels[0] == 7);
   cr_assert(labels[9999] == 6);
   free(labels);
@@ -148,7 +149,7 @@ Test(MNIST, mnist01)
 
 Test(MNIST, mnist02)
 {
-  Matrix **imgs = load_MNIST_images("TRAINING_DATA/x_test.txt", 10000);
+  Matrix **imgs = load_MNIST_images("TEST_DATA/x_test.txt", 10000);
   cr_assert(imgs[0]->values[7][6] - 84 < 0.0001);
   cr_assert(imgs[1]->values[3][10] - 116 < 0.0001);
   cr_assert(imgs[1]->values[3][9] < 0.0001);
