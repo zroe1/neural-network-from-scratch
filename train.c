@@ -37,10 +37,10 @@ int main() {
   Layer *l2 = init_layer(NULL, NULL, init_random_weights(129, 11), allocate_empty(129, 10));
   Squish_Layer *squish = init_squish_layer(NULL, NULL);
 
-  for (unsigned int epoch = 0; epoch < NUM_EPOCHS - NUM_EPOCHS + 1; epoch++) {
+  for (unsigned int epoch = 0; epoch < NUM_EPOCHS; epoch++) {
     double epoch_loss = 0;
 
-    for (unsigned int current_img = 0; current_img < NUM_IMGS -  NUM_IMGS + 1; current_img++) {
+    for (unsigned int current_img = 0; current_img < NUM_IMGS; current_img++) {
       in->output = flattened_imgs[current_img];
       double correct = labels[current_img];
 
