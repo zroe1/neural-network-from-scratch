@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include "network.h"
 
-double LEARNING_RATE = 0.001;
+double LEARNING_RATE = 0.0015;
+double NUM_EPOCHS = 20;
 
 void save_weights(Matrix *weights, char *filename) {
   FILE *weights_file = fopen(filename, "w");
@@ -35,7 +36,7 @@ int main() {
   Layer *l2 = init_layer(NULL, NULL, init_random_weights(129, 11), allocate_empty(129, 10));
   Squish_Layer *squish = init_squish_layer(NULL, NULL);
 
-  for (unsigned int epoch = 0; epoch < 20; epoch++) {
+  for (unsigned int epoch = 0; epoch < NUM_EPOCHS; epoch++) {
     double epoch_loss = 0;
 
     for (unsigned int current_img = 0; current_img < NUM_IMGS; current_img++) {
@@ -53,13 +54,12 @@ int main() {
         }
       }
       backward_pass(in, l1, relu, l2, squish, correct);
-      if (current_img % 128 == 0) {
-        gradient_descent(l1, l2, LEARNING_RATE);
-        zero_gradients(l1->weight_grads);
-        zero_gradients(l2->weight_grads);
-      }
+      gradient_descent(l1, l2, LEARNING_RATE);
+      zero_gradients(l1->weight_grads);
+      zero_gradients(l2->weight_grads);
     }
-    epoch_loss /= 60000;
+    epoch_loss /= NUM_IMGS;
+    // epoch_loss = 60000;
     printf("#%d. EPOCH LOSS: %f\n", epoch + 1, epoch_loss);
   }
 
@@ -77,7 +77,7 @@ int main() {
   free_matrix_array(test_imgs, NUM_TEST_IMGS);
 
   double accuracy = 0;
-  for (unsigned int current_img = 0; current_img < 10000; current_img++) {
+  for (unsigned int current_img = 0; current_img < NUM_TEST_IMGS; current_img++) {
     in->output = flattened_test_imgs[current_img];
     double correct = test_labels[current_img];
 
@@ -94,7 +94,7 @@ int main() {
       accuracy += 1;
     }
   }
-  accuracy /= 10000;
+  accuracy /= NUM_TEST_IMGS;
   printf("accuracy: %f\n", accuracy);
 
   save_weights(l1->weights, "layer1_weights.txt");

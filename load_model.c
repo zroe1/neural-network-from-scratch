@@ -82,7 +82,7 @@ int main() {
   printf("\nImages tested: %d\n", NUM_TEST_IMGS);
   printf("Correctly classified: %d\n", (int)accuracy);
   printf("Incorrectly classified: %d\n", NUM_TEST_IMGS - (int)accuracy);
-  accuracy /= 10000;
+  accuracy /= NUM_TEST_IMGS;
   printf("Accuracy: %.1f%%\n\n", accuracy * 100);
 
   free(test_labels);
