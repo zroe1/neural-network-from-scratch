@@ -9,7 +9,7 @@ The code is then tested on the famous MNIST handwritten digit dataset. The accur
 
 The model architecture is almost identical to the [MNIST model](https://www.tensorflow.org/datasets/keras_example) in the TensorFlow documentation. Both models take in a flattened image, have one fully connected layer with 128 outputs (activation RELU), followed by another layer with 10 outputs. 
 
-The main difference is between the loss. The TensorFlow model specifies "SparseCategoricalCrossentropy" as the loss which applies the softmax function to the model outputs (shown below). 
+The main difference between the models is the loss. The TensorFlow model specifies "SparseCategoricalCrossentropy" as the loss which applies the softmax function to the model outputs (shown below). 
 
 <b>Softmax layer:</b>  
 <img width="535" alt="Screenshot 2023-09-07 at 5 19 35 PM" src="https://github.com/zroe1/neural-network-from-scratch/assets/114773939/ceddfeaf-4476-4df7-8af1-d97967f691c2">  
@@ -33,7 +33,7 @@ If I had to guess, it probably is some combination of 1 & 2. The problem with fi
 
 ## Optimizer and loss
 
-The model uses stochastic gradient descent (SGD) and a mean squared error loss to update gradients. The network is also designed to work with regular gradient descent, where the gradient is calculated by factoring in each image in the training data. The learning rate I have found works best is 10<sup>-3</sup>.
+The model uses stochastic gradient descent (SGD) and a mean squared error loss to update gradients. The network is also designed to work with regular gradient descent, where the gradient is calculated by factoring in each image in the training data. The learning rate I have found works best is 0.0015.
 
 ## Running the code
 
@@ -52,12 +52,11 @@ Running either of these commands will give detailed information about the model'
 
 ## Next steps
 
-I am going to take a break on this project for a while after I complete the steps below.
+As of writing this (9/10/23) the code works as intended and runs Valgrind-clean:  
+  
+<img width="822" alt="Screenshot 2023-09-10 at 2 23 59 PM" src="https://github.com/zroe1/neural-network-from-scratch/assets/114773939/f67ceb33-5a7a-4c90-b532-3016c3cf0d64">  
 
-<ol>
-  <li>Use valgrind to confirm that all allocated memory is freed</li>
-  <li>Remove hardcoded values in train.c and replace them with constants</li>
-</ol>
+I may return to this project at some point to improve model performance, but for the time being, I am taking a break to work on other things.  
 
 Thanks for reading. Made with ❤️ and C.
 <p align="center"><img width="100%" alt="Screenshot 2023-09-05 at 2 00 32 PM" src="https://github.com/zroe1/neural-network-from-scratch/assets/114773939/e7ec83eb-38ca-4cde-9f18-950832b5bcee"></p>  
