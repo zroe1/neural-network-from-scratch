@@ -320,12 +320,12 @@ Test(backward_pass, back01) {
   Squish_Layer *squish = init_squish_layer(NULL, NULL);
   
   forward_pass(in, l1, relu, l2, squish);
-  backward_pass(in, l1, relu, l2, squish, 1);
+  backward_pass(in, l1, relu, l2, squish, 0);
 
   cr_assert(l2->weight_grads->values[0][0] + 0.16 < 0.1);
 
   forward_pass(in, l1, relu, l2, squish);
-  backward_pass(in, l1, relu, l2, squish, 1);;
+  backward_pass(in, l1, relu, l2, squish, 0);;
 
   cr_assert(l2->weight_grads->values[0][0] + 0.32 < 0.1);
   cr_assert(l2->output_grads->values[0][0] - 0.16 < 0.1);
