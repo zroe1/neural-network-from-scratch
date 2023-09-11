@@ -1,9 +1,9 @@
 # Neural network with only stdio.h and stdlib.h in C  
-<img src="https://img.shields.io/badge/Data-MNIST-black">  <img src="https://img.shields.io/badge/Accuracy-70.7-d6fc2d">  <img src="https://img.shields.io/badge/tests-passing-brightgreen">
+<img src="https://img.shields.io/badge/Data-MNIST-black">  <img src="https://img.shields.io/badge/Accuracy-79.2-d6fc2d">  <img src="https://img.shields.io/badge/tests-passing-brightgreen">
 
 This repository includes code for a fully functional neural network using only stdio.h and stdlib.h in C. Performing matrix multiplication, calculating derivatives, and updating gradients is all done without any outside libraries.
 
-The code is then tested on the famous MNIST handwritten digit dataset. The accuracy of the model is 70.7% on images not present in the training data, but I suspect this number would be higher if it weren't for the constraints of only using stdio.h and stdlib.h in C, as I discuss more below.
+The code is then tested on the famous MNIST handwritten digit dataset. The accuracy of the model is 79.2% on images not present in the training data, but I suspect this number would be higher if it weren't for the constraints of only using stdio.h and stdlib.h in C, as I discuss more below.
 
 ## Model architecture
 
@@ -21,7 +21,7 @@ This sadly cannot easily be calculated without importing the math.h library in C
 
 ## Notes on performance
 
-I have a few guesses why the performance of the network is only ~70%, while other networks of similar architecture typically score well above 90%.
+I have a few guesses why the performance of the network is only ~79%, while other networks of similar architecture typically score well above 90%.
 
 <ol>
   <li>The differences in model architecture (described above), made necessary by the constraints of the project, could be causing bad gradient updates.</li>
