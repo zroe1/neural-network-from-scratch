@@ -3,7 +3,7 @@
 
 This repository includes code for a fully functional neural network using only stdio.h and stdlib.h in C. Performing matrix multiplication, calculating derivatives, and updating gradients is all done without any outside libraries.
 
-The code is then tested on the famous MNIST handwritten digit dataset. The accuracy of the model is 79.2% on images not present in the training data, but I suspect this number would be higher if it weren't for the constraints of only using stdio.h and stdlib.h in C, as I discuss more below.
+The code is then tested on the famous MNIST handwritten digit dataset. The accuracy of the model is 79.2% on images not present in the training data, but I suspect I could improve accuracy with a few changes as I discuss below.
 
 ## Model architecture
 
@@ -14,26 +14,18 @@ The main difference between the models is the loss. The TensorFlow model specifi
 <b>Softmax layer:</b>  
 <img width="535" alt="Screenshot 2023-09-07 at 5 19 35 PM" src="https://github.com/zroe1/neural-network-from-scratch/assets/114773939/ceddfeaf-4476-4df7-8af1-d97967f691c2">  
 
-This sadly cannot easily be calculated without importing the math.h library in C. I wanted to stick to only using stdio.h and stdlib.h to challenge myself as an ML engineer so I chose a substitution that works without any extra imports. I don't know if there is a technical term for this calculation but I call it the "squish" layer (shown below).
+This sadly cannot easily be calculated without importing  math.h to calculate e<sup>z</sup> where "e" is Euler's number and "z" is a C double. I wanted to stick to only using stdio.h and stdlib.h to challenge myself as an ML engineer so I chose a substitution that works without any extra imports. I don't know if there is a technical term for this calculation but I call it the "squish" layer (shown below).
 
 <b>"Squish" layer:</b>  
 <img width="517" alt="Screenshot 2023-09-07 at 5 19 26 PM" src="https://github.com/zroe1/neural-network-from-scratch/assets/114773939/2657755b-be4f-4c05-919b-dda94c4612ab">
 
 ## Notes on performance
 
-I have a few guesses why the performance of the network is only ~79%, while other networks of similar architecture typically score well above 90%.
-
-<ol>
-  <li>The differences in model architecture (described above), made necessary by the constraints of the project, could be causing bad gradient updates.</li>
-  <li>I could be choosing a bad loss function (I have not experimented with loss functions other than mean squared error).</li>
-  <li>There could be an error somewhere in the code that I am missing.</li>
-</ol>
-
-If I had to guess, it probably is some combination of 1 & 2. The problem with fixing either of these problems is it would be very difficult to do well only using stdlib.h and stdio.h (this is less true for #2 but it still applies).
+I have a few ideas why the performance of the network is only ~79%, while other networks of similar architecture typically score well above 90%. My best guess, however, is it probably has something to do with the fact that I used a nontraditional way of calculating the probability distribution of the data using a "squish" layer, discussed in the above section. Although I don't understand all the details, I am sure there is a good reason why ML engineers generally choose something like softmax over my approach.
 
 ## Optimizer and loss
 
-The model uses stochastic gradient descent (SGD) and a mean squared error loss to update gradients. The network is also designed to work with regular gradient descent, where the gradient is calculated by factoring in each image in the training data. The learning rate I have found works best is 0.0015.
+The model uses stochastic gradient descent (SGD) and a mean squared error loss to update gradients. The network is also designed to work with regular gradient descent, where the gradient is calculated by factoring in each image in the training data. The learning rate I have found works best is 10<sup>-3</sup>.
 
 ## Running the code
 
