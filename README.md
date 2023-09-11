@@ -1,9 +1,9 @@
 # Neural network with only stdio.h and stdlib.h in C  
 <img src="https://img.shields.io/badge/Data-MNIST-black">  <img src="https://img.shields.io/badge/Accuracy-70.7-d6fc2d">  <img src="https://img.shields.io/badge/tests-passing-brightgreen">
 
-This repository includes code for a fully functional neural network using only stdio.h and stdlib.h in C. Preforming matrix multiplication, calculating derivatives, and updating gradients is all done without any outside libraries.
+This repository includes code for a fully functional neural network using only stdio.h and stdlib.h in C. Performing matrix multiplication, calculating derivatives, and updating gradients is all done without any outside libraries.
 
-The code is then tested on the famous MNIST handwritten digit dataset. The accuracy of the model is 70.7% on images not present in the training data, but I suspect this number would be higher if it were not for the contraints of only using stdio.h and stdlib.h in C, as I discuss more below.
+The code is then tested on the famous MNIST handwritten digit dataset. The accuracy of the model is 70.7% on images not present in the training data, but I suspect this number would be higher if it weren't for the constraints of only using stdio.h and stdlib.h in C, as I discuss more below.
 
 ## Model architecture
 
@@ -19,13 +19,13 @@ This sadly cannot easily be calculated without importing the math.h library in C
 <b>"Squish" layer:</b>  
 <img width="517" alt="Screenshot 2023-09-07 at 5 19 26 PM" src="https://github.com/zroe1/neural-network-from-scratch/assets/114773939/2657755b-be4f-4c05-919b-dda94c4612ab">
 
-## Notes on preformance
+## Notes on performance
 
-I have a few guesses why the preformance of the network is only ~70%, while other networks of similar architecture typically score well above 90%.
+I have a few guesses why the performance of the network is only ~70%, while other networks of similar architecture typically score well above 90%.
 
 <ol>
-  <li>The differences in model architecture (described above), made necessary by the contrains of the project could be causing bad gradient updates.</li>
-  <li>I could be choosing a bad loss function (I have not experiemented with loss functions other than mean squared error).</li>
+  <li>The differences in model architecture (described above), made necessary by the constraints of the project, could be causing bad gradient updates.</li>
+  <li>I could be choosing a bad loss function (I have not experimented with loss functions other than mean squared error).</li>
   <li>There could be an error somewhere in the code that I am missing.</li>
 </ol>
 
