@@ -372,7 +372,7 @@ void backward_pass(Layer *input_layer,
   
   for (unsigned int i = 0; i < squish->output->columns - 1; i++) {
     double output_grad;
-    if (i + 1 == correct) {
+    if (i == correct) {
       output_grad = calc_grad_of_input_to_loss(squish->output->values[0][i], 1);
     } else {
       output_grad = calc_grad_of_input_to_loss(squish->output->values[0][i], 0);

@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "network.h"
 
-double LEARNING_RATE = 0.0015;
-double NUM_EPOCHS = 20;
+double LEARNING_RATE = 0.001;
+double NUM_EPOCHS = 25;
 
 void save_weights(Matrix *weights, char *filename) {
   FILE *weights_file = fopen(filename, "w");
@@ -37,10 +37,10 @@ int main() {
   Layer *l2 = init_layer(NULL, NULL, init_random_weights(129, 11), allocate_empty(129, 10));
   Squish_Layer *squish = init_squish_layer(NULL, NULL);
 
-  for (unsigned int epoch = 0; epoch < NUM_EPOCHS - NUM_EPOCHS + 1; epoch++) {
+  for (unsigned int epoch = 0; epoch < NUM_EPOCHS; epoch++) {
     double epoch_loss = 0;
 
-    for (unsigned int current_img = 0; current_img < NUM_IMGS -  NUM_IMGS + 1; current_img++) {
+    for (unsigned int current_img = 0; current_img < NUM_IMGS; current_img++) {
       in->output = flattened_imgs[current_img];
       double correct = labels[current_img];
 
@@ -48,7 +48,7 @@ int main() {
 
       // calculates loss for data point
       for (unsigned int i = 0; i < 10; i++) {
-        if (i + 1 == correct) {
+        if (i == correct) {
           epoch_loss += calc_mean_squared_loss(squish->output->values[0][i], 1);
         } else {
           epoch_loss += calc_mean_squared_loss(squish->output->values[0][i], 0);
@@ -91,7 +91,7 @@ int main() {
         max_output_idx = i;
       }
     }
-    if (max_output_idx + 1 == correct) {
+    if (max_output_idx == correct) {
       accuracy += 1;
     }
   }

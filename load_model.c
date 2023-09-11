@@ -75,7 +75,7 @@ int main() {
         max_output_idx = i;
       }
     }
-    if (max_output_idx + 1 == correct) {
+    if (max_output_idx == correct) {
       accuracy += 1;
     }
   }
