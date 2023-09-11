@@ -30,6 +30,7 @@ void load_weights(char *filename, Matrix *weights) {
       weights_row++;
     }
   }
+  fclose(file);
 }
 
 int main() {
@@ -88,6 +89,9 @@ int main() {
   free(test_labels);
   free_matrix_array(flattened_test_imgs, NUM_TEST_IMGS);
   free(in); // output matrix for this layer has already been freed
-  
+  free_layer(l1);
+  free_layer(l2);
+  free_squish_layer(squish);
+  free_RELU_layer(relu);
   return 0;
 }
