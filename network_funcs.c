@@ -122,8 +122,8 @@ Layer *init_layer(Matrix *output,
   return rv;
 }
 
-RELU_Layer *init_RELU_layer(Matrix *output, Matrix *output_grads) {
-  RELU_Layer *rv = (RELU_Layer *)malloc(sizeof(RELU_Layer));
+ReLU_Layer *init_ReLU_layer(Matrix *output, Matrix *output_grads) {
+  ReLU_Layer *rv = (ReLU_Layer *)malloc(sizeof(ReLU_Layer));
   rv->output = output;
   rv->output_grads = output_grads;
   return rv;
@@ -145,7 +145,7 @@ void free_layer(Layer *l) {
   free(l);
 }
 
-void free_RELU_layer(RELU_Layer *l) {
+void free_ReLU_layer(ReLU_Layer *l) {
   if (l->output != NULL) {
     free_matrix(l->output);
   }
@@ -251,7 +251,7 @@ Matrix *calc_layer_input_gradients(Layer *above_layer, Matrix *rv) {
   return rv;
 }
 
-void calc_RELU_layer(RELU_Layer *relu, Matrix *input) {
+void calc_ReLU_layer(ReLU_Layer *relu, Matrix *input) {
   Matrix *output = allocate_empty(1, input->columns);
 
   for (unsigned int i = 0; i < input->columns; i++) {
@@ -265,9 +265,9 @@ void calc_RELU_layer(RELU_Layer *relu, Matrix *input) {
   relu->output = output;
 }
 
-void calc_layer_gradients_from_RELU(Layer *input_layer, Matrix *RELU_grads) {
-  if (RELU_grads->columns != input_layer->output->columns -1) {
-    fprintf(stderr, "ERROR: RELU gradients != number of input layer outputs\n");
+void calc_layer_gradients_from_ReLU(Layer *input_layer, Matrix *ReLU_grads) {
+  if (ReLU_grads->columns != input_layer->output->columns -1) {
+    fprintf(stderr, "ERROR: ReLU gradients != number of input layer outputs\n");
     fprintf(stderr, "(EXIT EARLY)\n");
     exit(1);
   }
@@ -285,7 +285,7 @@ void calc_layer_gradients_from_RELU(Layer *input_layer, Matrix *RELU_grads) {
 
   for (unsigned int i = 0; i < grads->columns; i++) {
     if (input_layer->output->values[0][i] > 0) {
-      grads->values[0][i] += RELU_grads->values[0][i];
+      grads->values[0][i] += ReLU_grads->values[0][i];
     } else {
       grads->values[0][i] += 0;
     }
@@ -348,19 +348,19 @@ void gradient_descent(Layer *layer1, Layer *layer2, double learning_rate) {
 
 void forward_pass(Layer *input_layer,
                   Layer *layer1,
-                  RELU_Layer *layer1_RELU,
+                  ReLU_Layer *layer1_ReLU,
                   Layer *layer2,
                   Squish_Layer *squish)
 {
   calc_layer_output(layer1, input_layer->output);
-  calc_RELU_layer(layer1_RELU, layer1->output);
-  calc_layer_output(layer2, layer1_RELU->output);
+  calc_ReLU_layer(layer1_ReLU, layer1->output);
+  calc_layer_output(layer2, layer1_ReLU->output);
   calc_squish_layer(squish, layer2->output);
 }
 
 void backward_pass(Layer *input_layer,
                    Layer *layer1,
-                   RELU_Layer *layer1_RELU,
+                   ReLU_Layer *layer1_ReLU,
                    Layer *layer2,
                    Squish_Layer *squish,
                    double correct)
@@ -381,9 +381,9 @@ void backward_pass(Layer *input_layer,
   }
 
   calc_layer_gradients_from_squish(layer2, squish);
-  calc_weight_gradients(layer2, layer1_RELU->output);
-  layer1_RELU->output_grads = calc_layer_input_gradients(layer2, layer1_RELU->output_grads);
-  calc_layer_gradients_from_RELU(layer1, layer1_RELU->output_grads);
+  calc_weight_gradients(layer2, layer1_ReLU->output);
+  layer1_ReLU->output_grads = calc_layer_input_gradients(layer2, layer1_ReLU->output_grads);
+  calc_layer_gradients_from_ReLU(layer1, layer1_ReLU->output_grads);
   calc_weight_gradients(layer1, input_layer->output);
 }
 
@@ -518,7 +518,7 @@ void print_layer(Layer *layer, char *layer_name) {
   printf("_________________________________________________________________\n\n");
 }
 
-void print_RELU_layer(RELU_Layer *layer, char *layer_name) {
+void print_ReLU_layer(ReLU_Layer *layer, char *layer_name) {
   printf("*****************************************************************\n");
   printf("                      LAYER: %s\n", layer_name);
   printf("*****************************************************************\n");

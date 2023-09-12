@@ -33,7 +33,7 @@ int main() {
   double *labels = load_MNIST_lables("TRAINING_DATA/y_train.txt", NUM_IMGS);
   Layer *in = init_layer(NULL, NULL, NULL, NULL);
   Layer *l1 = init_layer(NULL, NULL, init_random_weights(785, 129), allocate_empty(785, 128));
-  RELU_Layer *relu = init_RELU_layer(NULL, NULL);
+  ReLU_Layer *relu = init_ReLU_layer(NULL, NULL);
   Layer *l2 = init_layer(NULL, NULL, init_random_weights(129, 11), allocate_empty(129, 10));
   Squish_Layer *squish = init_squish_layer(NULL, NULL);
 
@@ -110,6 +110,6 @@ int main() {
   free_layer(l1);
   free_layer(l2);
   free_squish_layer(squish);
-  free_RELU_layer(relu);
+  free_ReLU_layer(relu);
   return 0;
 }

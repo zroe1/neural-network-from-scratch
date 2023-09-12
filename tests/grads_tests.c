@@ -73,11 +73,11 @@ Test(input_grads, ingrad02)
   };
   Layer *in = init_layer(allocate_from_2D_arr(1, 2, input_arr), NULL, NULL, NULL);
   Layer *l = init_layer(NULL, NULL, allocate_from_2D_arr(2, 2, weights_arr), allocate_empty(2, 1)); 
-  RELU_Layer *relu = init_RELU_layer(NULL, allocate_from_2D_arr(1, 1, output_grad));
+  ReLU_Layer *relu = init_ReLU_layer(NULL, allocate_from_2D_arr(1, 1, output_grad));
 
   calc_layer_output(l, in->output);
-  calc_RELU_layer(relu, l->output);
-  calc_layer_gradients_from_RELU(l, relu->output_grads);
+  calc_ReLU_layer(relu, l->output);
+  calc_layer_gradients_from_ReLU(l, relu->output_grads);
   calc_weight_gradients(l, in->output);
   in->output_grads = calc_layer_input_gradients(l, in->output_grads);
 
@@ -88,7 +88,7 @@ Test(input_grads, ingrad02)
 
   free_layer(in);
   free_layer(l);
-  free_RELU_layer(relu);
+  free_ReLU_layer(relu);
 }
 
 Test(relu_grads, relu00)
@@ -101,16 +101,16 @@ Test(relu_grads, relu00)
   };
 
   Layer *in = init_layer(allocate_from_2D_arr(1, 2, input_arr), NULL, NULL, NULL);
-  RELU_Layer *relu = init_RELU_layer(NULL, allocate_from_2D_arr(1, 1, output_grad));
+  ReLU_Layer *relu = init_ReLU_layer(NULL, allocate_from_2D_arr(1, 1, output_grad));
   
-  calc_RELU_layer(relu, in->output);
-  calc_layer_gradients_from_RELU(in, relu->output_grads);
+  calc_ReLU_layer(relu, in->output);
+  calc_layer_gradients_from_ReLU(in, relu->output_grads);
 
   cr_assert(in->output_grads->values[0][0] == 1);
   cr_assert(relu->output_grads->values[0][0] == 1);
 
   free_layer(in);
-  free_RELU_layer(relu);
+  free_ReLU_layer(relu);
 }
 
 Test(relu_grads, relu01)
@@ -124,16 +124,16 @@ Test(relu_grads, relu01)
   
   // test with initalized output gradients on input layer
   Layer *in = init_layer(allocate_from_2D_arr(1, 2, input_arr), allocate_empty(1, 1), NULL, NULL);
-  RELU_Layer *relu = init_RELU_layer(NULL, allocate_from_2D_arr(1, 1, output_grad));
+  ReLU_Layer *relu = init_ReLU_layer(NULL, allocate_from_2D_arr(1, 1, output_grad));
 
-  calc_RELU_layer(relu, in->output);
-  calc_layer_gradients_from_RELU(in, relu->output_grads);
+  calc_ReLU_layer(relu, in->output);
+  calc_layer_gradients_from_ReLU(in, relu->output_grads);
 
   cr_assert(in->output_grads->values[0][0] == 1);
   cr_assert(relu->output_grads->values[0][0] == 1);
 
   free_layer(in);
-  free_RELU_layer(relu);
+  free_ReLU_layer(relu);
 }
 
 /* tests for zero gradient in layer before relu */
@@ -147,16 +147,16 @@ Test(relu_grads, relu02)
   };
 
   Layer *in = init_layer(allocate_from_2D_arr(1, 2, input_arr), NULL, NULL, NULL);
-  RELU_Layer *relu = init_RELU_layer(NULL, allocate_from_2D_arr(1, 1, output_grad));
+  ReLU_Layer *relu = init_ReLU_layer(NULL, allocate_from_2D_arr(1, 1, output_grad));
   
-  calc_RELU_layer(relu, in->output);
-  calc_layer_gradients_from_RELU(in, relu->output_grads);
+  calc_ReLU_layer(relu, in->output);
+  calc_layer_gradients_from_ReLU(in, relu->output_grads);
 
   cr_assert(in->output_grads->values[0][0] == 0);
   cr_assert(relu->output_grads->values[0][0] == 1);
 
   free_layer(in);
-  free_RELU_layer(relu);
+  free_ReLU_layer(relu);
 }
 
 /* 
@@ -277,7 +277,7 @@ Test(backward_pass, back00) {
   };
   Layer *in = init_layer(allocate_from_2D_arr(1, 11, input_arr), NULL, NULL, NULL);
   Layer *l1 = init_layer(NULL, NULL, allocate_from_2D_arr(11, 11, weights), allocate_empty(11, 10));
-  RELU_Layer *relu = init_RELU_layer(NULL, NULL);
+  ReLU_Layer *relu = init_ReLU_layer(NULL, NULL);
   Layer *l2 = init_layer(NULL, NULL, allocate_from_2D_arr(11, 11, weights), allocate_empty(11, 10));
   Squish_Layer *squish = init_squish_layer(NULL, NULL);
 
@@ -286,7 +286,7 @@ Test(backward_pass, back00) {
 
   free_layer(in);
   free_layer(l1);
-  free_RELU_layer(relu);
+  free_ReLU_layer(relu);
   free_layer(l2);
   free_squish_layer(squish);
 
@@ -315,7 +315,7 @@ Test(backward_pass, back01) {
 
   Layer *in = init_layer(allocate_from_2D_arr(1, 11, input_arr), NULL, NULL, NULL);
   Layer *l1 = init_layer(NULL, NULL, allocate_from_2D_arr(11, 11, weights), allocate_empty(11, 10));
-  RELU_Layer *relu = init_RELU_layer(NULL, NULL);
+  ReLU_Layer *relu = init_ReLU_layer(NULL, NULL);
   Layer *l2 = init_layer(NULL, NULL, allocate_from_2D_arr(11, 11, weights), allocate_empty(11, 10));
   Squish_Layer *squish = init_squish_layer(NULL, NULL);
   
@@ -333,7 +333,7 @@ Test(backward_pass, back01) {
 
   free_layer(in);
   free_layer(l1);
-  free_RELU_layer(relu);
+  free_ReLU_layer(relu);
   free_layer(l2);
   free_squish_layer(squish);
 }

@@ -7,7 +7,7 @@ The code is then tested on the famous MNIST handwritten digit dataset. The accur
 
 ## Model architecture
 
-The model architecture is almost identical to the [MNIST model](https://www.tensorflow.org/datasets/keras_example) in the TensorFlow documentation. Both models take in a flattened image, have one fully connected layer with 128 outputs (activation RELU), followed by another layer with 10 outputs. 
+The model architecture is almost identical to the [MNIST model](https://www.tensorflow.org/datasets/keras_example) in the TensorFlow documentation. Both models take in a flattened image, have one fully connected layer with 128 outputs (activation ReLU), followed by another layer with 10 outputs. 
 
 The main difference between the models is the loss. The TensorFlow model specifies "SparseCategoricalCrossentropy" as the loss which applies the softmax function to the model outputs (shown below). 
 

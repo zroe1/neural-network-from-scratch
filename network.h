@@ -15,7 +15,7 @@ typedef struct {
 typedef struct {
   Matrix *output;
   Matrix *output_grads;
-} RELU_Layer;
+} ReLU_Layer;
 
 /* 
  * This may be swapped out for softmax or sigmoid in a future version.
@@ -115,11 +115,11 @@ Layer *init_layer(Matrix *output,
                   Matrix *weight_grads);
 
 /**
- * Frees all associated memory with a RELU layer.
+ * Frees all associated memory with a ReLU layer.
  * 
- * @param l an allocated RELU layer
+ * @param l an allocated ReLU layer
  */
-void free_RELU_layer(RELU_Layer *l);
+void free_ReLU_layer(ReLU_Layer *l);
 
 /**
  * Frees all associated memory with a layer.
@@ -128,7 +128,7 @@ void free_RELU_layer(RELU_Layer *l);
  */
 void free_layer(Layer *l);
 
-RELU_Layer *init_RELU_layer(Matrix *output, Matrix *output_grads);
+ReLU_Layer *init_ReLU_layer(Matrix *output, Matrix *output_grads);
 
 /**
  * Changes a Matrix struct representing a set of gradients so each value in the
@@ -170,21 +170,21 @@ void calc_layer_output(Layer *layer, Matrix *input);
 Matrix *calc_layer_input_gradients(Layer *above_layer, Matrix *rv);
 
 /**
- * Calculates the output of a RELU layer. 
+ * Calculates the output of a ReLU layer. 
  * 
- * @param relu an allocated RELU layer
- * @param input the input to a RELU layer
+ * @param relu an allocated ReLU layer
+ * @param input the input to a ReLU layer
  */
-void calc_RELU_layer(RELU_Layer *relu, Matrix *input);
+void calc_ReLU_layer(ReLU_Layer *relu, Matrix *input);
 
 /**
  * Calculates the output gradients for a given layer, given that there is a
- * RELU layer directly above it. 
+ * ReLU layer directly above it. 
  * 
  * @param input_layer an allocated layer
- * @param RELU_grads a matrix representing the gradients of the RELU output
+ * @param ReLU_grads a matrix representing the gradients of the ReLU output
  */
-void calc_layer_gradients_from_RELU(Layer *input_layer, Matrix *RELU_grads);
+void calc_layer_gradients_from_ReLU(Layer *input_layer, Matrix *ReLU_grads);
 
 /**
  * Prints a layer given it's output, output gradients, weights, and weight 
@@ -197,13 +197,13 @@ void calc_layer_gradients_from_RELU(Layer *input_layer, Matrix *RELU_grads);
 void print_layer(Layer *layer, char *layer_name);
 
 /**
- * Prints a RELU layer given it's output and output gradients. The output also 
+ * Prints a ReLU layer given it's output and output gradients. The output also 
  * includes the "layer_name" passed into the function.
  * 
- * @param layer an allocated RELU layer
+ * @param layer an allocated ReLU layer
  * @param layer_name the name of the layer to be printed
  */
-void print_RELU_layer(RELU_Layer *layer, char *layer_name);
+void print_ReLU_layer(ReLU_Layer *layer, char *layer_name);
 
 /**
  * Prints a "squish" layer given it's output and output gradients. The output 
@@ -238,13 +238,13 @@ void gradient_descent_on_layer(Layer *layer, double learning_rate);
  * 
  * @param input_layer The input layer to the network
  * @param layer1 The first layer in the network (fully connected)
- * @param layer1_RELU RELU layer to be applied to first layer
+ * @param layer1_ReLU ReLU layer to be applied to first layer
  * @param layer2 The second layer in the network (fully connected)
  * @param squish The "squish" layer described in README.md
  */
 void forward_pass(Layer *input_layer,
                   Layer *layer1,
-                  RELU_Layer *layer1_RELU,
+                  ReLU_Layer *layer1_ReLU,
                   Layer *layer2,
                   Squish_Layer *squish);
 
@@ -254,14 +254,14 @@ void forward_pass(Layer *input_layer,
  * 
  * @param input_layer The input layer to the network
  * @param layer1 The first layer in the network (fully connected)
- * @param layer1_RELU RELU layer to be applied to first layer
+ * @param layer1_ReLU ReLU layer to be applied to first layer
  * @param layer2 The second layer in the network (fully connected)
  * @param squish The "squish" layer described in README.md
  * @param correct The correct label for the previous forward pass
  */
 void backward_pass(Layer *input_layer,
                    Layer *layer1,
-                   RELU_Layer *layer1_RELU,
+                   ReLU_Layer *layer1_ReLU,
                    Layer *layer2,
                    Squish_Layer *squish,
                    double correct);

@@ -18,14 +18,14 @@ Test(ouputs, outputs00)
 
   Matrix *in = allocate_from_2D_arr(1, 2, input_arr);
   Layer *l = init_layer(NULL, NULL, allocate_from_2D_arr(2, 2, weights_arr), NULL); 
-  RELU_Layer *relu = init_RELU_layer(NULL, allocate_from_2D_arr(1, 1, output_grad));
+  ReLU_Layer *relu = init_ReLU_layer(NULL, allocate_from_2D_arr(1, 1, output_grad));
 
   calc_layer_output(l, in);
-  calc_RELU_layer(relu, l->output);
+  calc_ReLU_layer(relu, l->output);
   cr_assert(l->output->values[0][0] == 4);
   cr_assert(relu->output->values[0][0] == 4);
 
-  free_RELU_layer(relu);
+  free_ReLU_layer(relu);
   free_layer(l);
 }
 
@@ -45,14 +45,14 @@ Test(ouputs, outputs01)
 
   Matrix *in = allocate_from_2D_arr(1, 2, input_arr);
   Layer *l = init_layer(NULL, NULL, allocate_from_2D_arr(2, 2, weights_arr), NULL); 
-  RELU_Layer *relu = init_RELU_layer(NULL, allocate_from_2D_arr(1, 1, output_grad));
+  ReLU_Layer *relu = init_ReLU_layer(NULL, allocate_from_2D_arr(1, 1, output_grad));
 
   calc_layer_output(l, in);
-  calc_RELU_layer(relu, l->output);
+  calc_ReLU_layer(relu, l->output);
   cr_assert(l->output->values[0][0] == -4);
   cr_assert(relu->output->values[0][0] == 0);
 
-  free_RELU_layer(relu);
+  free_ReLU_layer(relu);
   free_layer(l);
 }
 
@@ -113,7 +113,7 @@ Test(forward_pass, forward00)
 
   Layer *in = init_layer(allocate_from_2D_arr(1, 2, input_arr), NULL, NULL, NULL);
   Layer *l1 = init_layer(NULL, NULL, allocate_from_2D_arr(2, 2, weights_arr), NULL);
-  RELU_Layer *relu = init_RELU_layer(NULL, NULL);
+  ReLU_Layer *relu = init_ReLU_layer(NULL, NULL);
   Layer *l2 = init_layer(NULL, NULL, allocate_from_2D_arr(2, 2, weights_arr), NULL);
   Squish_Layer *s = init_squish_layer(NULL, NULL);
 
@@ -126,7 +126,7 @@ Test(forward_pass, forward00)
 
   free_layer(in);
   free_layer(l1);
-  free_RELU_layer(relu);
+  free_ReLU_layer(relu);
   free_layer(l2);
   free_squish_layer(s);
 }
