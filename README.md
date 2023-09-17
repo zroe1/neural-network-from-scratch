@@ -1,9 +1,9 @@
 # Neural network with only stdio.h and stdlib.h in C  
-<img src="https://img.shields.io/badge/Data-MNIST-black">  <img src="https://img.shields.io/badge/Accuracy-79.2-d6fc2d">  <img src="https://img.shields.io/badge/tests-passing-brightgreen">
+<img src="https://img.shields.io/badge/Data-MNIST-black">  <img src="https://img.shields.io/badge/Accuracy-79.4-d6fc2d">  <img src="https://img.shields.io/badge/tests-passing-brightgreen">
 
 This repository includes code for a fully functional neural network using only stdio.h and stdlib.h in C. Performing matrix multiplication, calculating derivatives, and updating gradients is all done without any outside libraries.
 
-The code is then tested on the famous MNIST handwritten digit dataset. The accuracy of the model is 79.2% on images not present in the training data, but I suspect I could improve accuracy with a few changes as I discuss below.
+The code is then tested on the famous MNIST handwritten digit dataset. The accuracy of the model is 79.4% on images not present in the training data, but I suspect I could improve accuracy with a few changes as I discuss below.
 
 ## Model architecture
 
