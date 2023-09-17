@@ -3,7 +3,7 @@
 #include "network.h"
 
 double LEARNING_RATE = 0.001;
-double NUM_EPOCHS = 25;
+double NUM_EPOCHS = 35;
 
 void save_weights(Matrix *weights, char *filename) {
   FILE *weights_file = fopen(filename, "w");
@@ -14,6 +14,23 @@ void save_weights(Matrix *weights, char *filename) {
     }
   }
   fclose(weights_file);
+}
+
+void shuffle_dataset(Matrix **inputs, double *labels, unsigned int len_data) {
+  for (unsigned int i = 0; i < len_data * 2; i++) {
+    unsigned int random_idx1 = rand() % (len_data);
+    unsigned int random_idx2 = rand() % (len_data);
+
+    // swaps two images
+    Matrix *temp_matrix = inputs[random_idx1];
+    inputs[random_idx1]  = inputs[random_idx2];
+    inputs[random_idx2] = temp_matrix;
+
+    // swaps two coresponding lables
+    double temp_double = labels[random_idx1];
+    labels[random_idx1] = labels[random_idx2];
+    labels[random_idx2] = temp_double;
+  }
 }
 
 int main() {
@@ -37,6 +54,7 @@ int main() {
   Layer *l2 = init_layer(NULL, NULL, init_random_weights(129, 11), allocate_empty(129, 10));
   Squish_Layer *squish = init_squish_layer(NULL, NULL);
 
+  shuffle_dataset(flattened_imgs, labels, 60000);
   for (unsigned int epoch = 0; epoch < NUM_EPOCHS; epoch++) {
     double epoch_loss = 0;
 
@@ -60,8 +78,9 @@ int main() {
       zero_gradients(l2->weight_grads);
     }
     epoch_loss /= NUM_IMGS;
-    // epoch_loss = 60000;
     printf("#%d. EPOCH LOSS: %f\n", epoch + 1, epoch_loss);
+
+    shuffle_dataset(flattened_imgs, labels, 60000);
   }
 
   unsigned int NUM_TEST_IMGS = 10000;
