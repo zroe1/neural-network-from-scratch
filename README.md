@@ -21,7 +21,7 @@ This sadly cannot easily be calculated without importing  math.h to calculate e<
 
 ## Notes on performance
 
-I have a few ideas why the performance of the network is only ~79%, while other networks of similar architecture typically score well above 90%. My best guess, however, is it probably has something to do with the fact that I used a nontraditional way of calculating the probability distribution of the data using a "squish" layer, discussed in the above section. Although I don't understand all the details, I am sure there is a good reason why ML engineers generally choose something like softmax over my approach.
+I have a few ideas why the performance of the network is only ~79%, while other networks of similar architecture typically score well above 90%. My best guess, however, is it probably has something to do with the fact that I used a nontraditional way of calculating the probability distribution of the data using a "squish" layer, discussed in the above section. Softmax in the original model probably played a role as a non-linearity in addition to merely converting outputs to probabilities. As a result, I think adding an extra layer with another ReLU would probably increase performance. The model is currently simply too linear.
 
 ## Optimizer and loss
 
@@ -48,7 +48,7 @@ As of writing this (9/10/23) the code works as intended and runs Valgrind-clean:
   
 <img width="822" alt="Screenshot 2023-09-10 at 2 23 59 PM" src="https://github.com/zroe1/neural-network-from-scratch/assets/114773939/f67ceb33-5a7a-4c90-b532-3016c3cf0d64">  
 
-I may return to this project at some point to improve model performance, but for the time being, I am taking a break to work on other things.  
+For future changes I plan to make see the "Notes on performance" section. I will likely return to this project in the next few months but for the time being, I am taking a break to work on other things.  
 
 Thanks for reading. Made with ❤️ and C.
 <p align="center"><img width="100%" alt="Screenshot 2023-09-05 at 2 00 32 PM" src="https://github.com/zroe1/neural-network-from-scratch/assets/114773939/e7ec83eb-38ca-4cde-9f18-950832b5bcee"></p>  
